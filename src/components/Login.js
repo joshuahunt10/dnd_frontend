@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom'
+import currentUser from '../currentUser'
 
 class Login extends Component {
+  static isPrivate = false
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -50,8 +54,10 @@ class Login extends Component {
       })
       // If we're using redux
       // this.props.dispatch({type: "SIGNIN", token: json.token})
-      this.props.onLogin(json.token)
-
+      alert("onLogin")
+      this.setState({token: json.token})
+      currentUser.token = json.token
+      console.log('currentuser',currentUser.token);
     })
   }
 
