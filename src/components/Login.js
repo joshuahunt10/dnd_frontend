@@ -48,13 +48,21 @@ class Login extends Component {
         password: '',
         token: json.token
       })
+      // If we're using redux
+      // this.props.dispatch({type: "SIGNIN", token: json.token})
+      this.props.onLogin(json.token)
 
     })
   }
 
   render() {
     if(this.state.token){
-      return <Redirect to='/dashboard' /> //pass the token down as props.  Then I can fetch the user data in the dashboard
+      return <Redirect
+        to={{
+          pathname: "/dashboard",
+          state: {token: this.state.token}
+        }}
+       /> //pass the token down as props.  Then I can fetch the user data in the dashboard
     }
     return (
       <div>

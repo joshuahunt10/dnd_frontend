@@ -1,32 +1,57 @@
 import React, { Component } from 'react';
+import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import PrivateRoute from './PrivateRoute'
 
+import BaseLayout from './BaseLayout';
+import Register from './Register';
+import Login from './Login';
+import Dashboard from './Dashboard'
+import currentUser from '../currentUser'
 import '../styles/App.css';
+
+const Splash = () => <div>Oh Hai</div>
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: {}
-    }
+    // this.state = {
+    //   token: ""
+    // }
+    this.onLogin = this.onLogin.bind(this)
   }
-
-  componentDidMount(){
-    fetch('http://localhost:4000/api/user')
-    .then(r => r.json())
-    .then(data => {
-      this.setState({
-        user: data.user
-      })
-    })
+  onLogin(token){
+    alert("onLogin")
+    // this.setState({token: token})
+    currentUser.token = token
+    console.log('currentuser',currentUser.token);
   }
+  //
+  // componentDidMount(){
+  //   fetch('http://localhost:4000/api/user')
+  //   .then(r => r.json())
+  //   .then(data => {
+  //     this.setState({
+  //       user: data.user
+  //     })
+  //   })
+  // }
 
   render() {
-    console.log('logging the state', this.state);
+
     return (
-      <div className="App">
-        <h1>Return from the db</h1>
-        <p>{this.state.user.name}</p>
-      </div>
+      <BrowserRouter>
+        <BaseLayout>
+          <Switch>
+            <Route path='/login' render={ () => <Login onLogin={this.onLogin}/> } />
+            <Route path='/register' component={Register} />
+
+            {/* <Route path='/dashboard' render={ () => <Dashboard token={this.state.token} />} /> */}
+            {/* <PrivateRoute path='/dashboard' render={ () => <Dashboard token={this.state.token} />} /> */}
+            <PrivateRoute path='/dashboard'  component={Dashboard}/>
+            <Route path='/' component={Splash} />
+          </Switch>
+        </BaseLayout>
+      </BrowserRouter>
     );
   }
 }

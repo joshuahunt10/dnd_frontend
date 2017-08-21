@@ -9,6 +9,7 @@ class BaseLayout extends Component {
         <h1>This is the Base Layout</h1>
         <nav>
           <Link to="/">Home</Link>
+          <Link to='/dashboard'>Dashboard</Link>
           <Link to='/register'>Register</Link>
           <Link to='/login'>Login</Link>
         </nav>
