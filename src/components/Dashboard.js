@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import currentUser from '../currentUser'
 
 class Dashboard extends Component {
   static isPrivate = true
@@ -11,7 +12,7 @@ class Dashboard extends Component {
     return (
       <div>
         <h2>This is the user Dashboard</h2>
-        <p>{this.props.token}</p>
+        <p>{currentUser.token}</p>
       </div>
     );
   }
