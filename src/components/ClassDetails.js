@@ -9,7 +9,14 @@ class ClassDetails extends Component {
       con: "",
       int: "",
       wis: "",
-      class: {}
+      class: {
+        proficiencies: [],
+        proficiency_choices: [{
+          from: []
+
+        }]
+
+      }
     }
     this.calcMod = this.calcMod.bind(this)
   }
@@ -33,11 +40,33 @@ class ClassDetails extends Component {
   }
 
   render() {
-    console.log('props in the classDetails',this.props);
+    // console.log('props in the classDetails',this.props);
+
     return (
       <div>
         <h2>This is the class Details page</h2>
         <h3>You chose a {this.state.class.name}</h3>
+        <p>Your hit die is a d{this.state.class.hit_die}</p>
+        <h4>Armor and Weapon Profeciencies</h4>
+        <ul>
+          {this.state.class.proficiencies.map((prof, index) => {
+            return(
+              <div key={index}>
+                <li>{prof.name}</li>
+              </div>
+            )
+          })}
+        </ul>
+        <h4>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</h4>
+        <ul>
+          {this.state.class.proficiency_choices[0].from.map((skill, index) => {
+            return(
+              <div key={index}>
+                <li>{skill.name}</li>
+              </div>
+            )
+          })}
+        </ul>
         <form>
           <fieldset>
             <legend>Stats</legend>
