@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom'
+import localStorage from 'local-storage'
 
 class Login extends Component {
   constructor(props) {
@@ -7,7 +8,8 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      token: null
+      token: null,
+      redirect: false
     }
     this.handleEmailInput = this.handleEmailInput.bind(this)
     this.handlePasswordInput = this.handlePasswordInput.bind(this)
@@ -42,27 +44,16 @@ class Login extends Component {
     })
     .then(r => r.json())
     .then(json => {
-      console.log(json);
-      this.setState({
-        email: '',
-        password: '',
-        token: json.token
-      })
-      // If we're using redux
-      // this.props.dispatch({type: "SIGNIN", token: json.token})
-      this.props.onLogin(json.token)
+      console.log('json in the login page', json)
+      localStorage.set("JWT", json.token)
+      this.setState({redirect: true})
 
     })
   }
 
   render() {
-    if(this.state.token){
-      return <Redirect
-        to={{
-          pathname: "/dashboard",
-          state: {token: this.state.token}
-        }}
-       /> //pass the token down as props.  Then I can fetch the user data in the dashboard
+    if(this.state.redirect){
+      return <Redirect to="/dashboard" />
     }
     return (
       <div>
