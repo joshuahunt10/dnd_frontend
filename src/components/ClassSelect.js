@@ -41,7 +41,7 @@ class CharCreate extends Component {
             <option value=""></option>
             {this.state.classes.map((ppl, index) => {
               return(
-                <option value={ppl.url.substring(ppl.url.lastIndexOf('/') + 1)}>{ppl.name}</option>
+                  <option value={ppl.url.substring(ppl.url.lastIndexOf('/') + 1)}>{ppl.name}</option>
               )
             })}
 
