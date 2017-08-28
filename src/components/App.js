@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import {BrowserRouter, Route} from 'react-router-dom'
 import AuthenticatedRoute from './AuthenticatedRoute'
 
 import BaseLayout from './BaseLayout';
@@ -9,7 +9,7 @@ import Dashboard from './Dashboard'
 import Splash from './Splash'
 import ClassSelect from './ClassSelect'
 import GameTables from './GameTables'
-import UserLayout from './UserLayout'
+// import UserLayout from './UserLayout'
 import ClassDetails from './ClassDetails'
 import '../styles/App.css';
 

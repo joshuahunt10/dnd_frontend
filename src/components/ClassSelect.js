@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link, Redirect} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 
 class CharCreate extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class CharCreate extends Component {
             <option value=""></option>
             {this.state.classes.map((ppl, index) => {
               return(
-                  <option value={ppl.url.substring(ppl.url.lastIndexOf('/') + 1)}>{ppl.name}</option>
+                  <option key={index} value={ppl.url.substring(ppl.url.lastIndexOf('/') + 1)}>{ppl.name}</option>
               )
             })}
 

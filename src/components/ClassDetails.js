@@ -14,6 +14,8 @@ class ClassDetails extends Component {
       modalText: '',
       modalTitle: '',
       showModal: false,
+      skillProf: [],
+      subClasss: "",
       class: {
         proficiencies: [],
         proficiency_choices: [{
@@ -21,12 +23,20 @@ class ClassDetails extends Component {
         }],
         saving_throws: [{
           url:""
+        }],
+        subclasses: [{
+          name: "",
+          url: ""
         }]
 
       }
     }
     this.calcMod = this.calcMod.bind(this)
     this.fetchAbilityScoreInfo = this.fetchAbilityScoreInfo.bind(this)
+    this.handleProfCheckBox = this.handleProfCheckBox.bind(this)
+    this.handleSubClassFetch = this.handleSubClassFetch.bind(this)
+    this.handleSubClassCheckBox = this.handleSubClassCheckBox.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount(){
@@ -59,12 +69,58 @@ class ClassDetails extends Component {
     })
   }
 
-  render() {
+  handleSubClassFetch(e){
+    fetch(`${e.target.id}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log(json);
+      this.setState({
+        modalText: json.desc[0],
+        modalTitle: json.name,
+        showModal: true
+      })
+    })
+  }
 
+  handleProfCheckBox(e){
+    let skillProf = this.state.skillProf
+    let splice = false
+    let holderIndex = 0;
+
+    for (var i = 0; i < skillProf.length; i++) {
+      if(skillProf[i] === e.target.value){
+        splice = true
+        holderIndex = i
+      }
+    }
+
+    if(splice){
+      skillProf.splice(holderIndex, 1)
+    }
+    else{
+      skillProf.push(e.target.value)
+    }
+    console.log('this.state.skillProf',skillProf);
+  }
+
+  handleSubClassCheckBox(e){
+    this.setState({
+      subClass: e.target.value
+    })
+  }
+
+  handleSubmit(e){
+    e.preventDefault()
+    console.log("working on it...");
+  }
+
+  render() {
 
     return (
       <div>
         <h2>This is the class Details page</h2>
+
+        <form onSubmit={this.handleSubmit}>
         <h3>You chose a {this.state.class.name}</h3>
         <p>Your hit die is a d{this.state.class.hit_die}</p>
         <h4>Armor and Weapon Profeciencies</h4>
@@ -77,81 +133,77 @@ class ClassDetails extends Component {
             )
           })}
         </ul>
-        {/* <h4>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</h4> */}
-        {/* need to make logic so that I can check and it will push into an array in the state that holds the choices.  Need to make the uncheck find the index of then splice out. */}
+
         <fieldset>
           <legend>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</legend>
           {this.state.class.proficiency_choices[0].from.map((skill, index) => {
             return(
               <div key={index}>
-                <input type='checkbox' />
+                <input type='checkbox' onChange={this.handleProfCheckBox} value={skill.name}/>
                 <label>{skill.name}</label>
               </div>
             )
           })}
         </fieldset>
-        {/* <ul>
-          {this.state.class.proficiency_choices[0].from.map((skill, index) => {
+        <fieldset>
+          <legend>
+            Options for subclasses
+          </legend>
+          {this.state.class.subclasses.map((sc, index) => {
             return(
-              <div key={index}>
-                <li>{skill.name}</li>
+              <div key={index} >
+                <input type="radio" value={sc.name} onChange={this.handleSubClassCheckBox}/>
+                <label id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</label>
               </div>
             )
           })}
-        </ul> */}
-        <form>
+        </fieldset>
           <fieldset>
             <legend>Stats</legend>
+            <h4>Saving Throws</h4>
+            {this.state.class.saving_throws.map((stat, index) => {
+              return(
+                <span> {stat.name}</span>
+              )
+            })}
             <table>
               <thead>
                 <tr>
                   <th>Stat Name</th>
                   <th>Value</th>
                   <th>Modifier</th>
-                  <th>Save</th>
                 </tr>
               </thead>
-              {this.state.class.saving_throws.map((stat, index) => {
-                return(
-                  <div key={index}>
-                    <a href={stat.url}>test {stat.url.substring(stat.url.lastIndexOf('/') + 1)}</a>
-                  </div>
-                )
-              })}
               <tbody>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='1' style={{cursor: 'pointer'}}> Strength </td>
                   <td><input type='text' onChange={e => this.setState({str: e.target.value})} value={this.state.str}/></td>
                   <td>{this.calcMod(this.state.str)}</td>
-                  <td>Do Later</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='2' style={{cursor: 'pointer'}}>Dexterity</td>
                   <td><input type='text' onChange={e => this.setState({dex: e.target.value})} value={this.state.dex} /></td>
                   <td>{this.calcMod(this.state.dex)}</td>
-                  <td>Do Later</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='3' style={{cursor: 'pointer'}}>Constitution</td>
                   <td><input type='text' onChange={e => this.setState({con: e.target.value})} value={this.state.con} /></td>
                   <td>{this.calcMod(this.state.con)}</td>
-                  <td>Do Later</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='4' style={{cursor: 'pointer'}}>Intelligence</td>
                   <td><input type='text' onChange={e => this.setState({int: e.target.value})} value={this.state.int} /></td>
                   <td>{this.calcMod(this.state.int)}</td>
-                  <td>Do Later</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Wisdom</td>
                   <td><input type='text' onChange={e => this.setState({wis: e.target.value})} value={this.state.wis} /></td>
                   <td>{this.calcMod(this.state.wis)}</td>
-                  <td>Do Later</td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
+          <button type="submit">Create Character!</button>
         </form>
          <Modal show={this.state.showModal} onHide={this.close}>
            <Modal.Body>
