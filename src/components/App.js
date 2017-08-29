@@ -21,7 +21,7 @@ class App extends Component {
         <BaseLayout>
           <AuthenticatedRoute path='/dashboard'  component={Dashboard} />
           <AuthenticatedRoute path='/dashboard/charcreate' component={ClassSelect} />
-          <AuthenticatedRoute path ='/dashboard/charcreate/:classID' component={ClassDetails} />
+          <AuthenticatedRoute path ='/dashboard/charcreate/:classID/:raceID' component={ClassDetails} />
           <AuthenticatedRoute path='/dashboard/tables' component={GameTables} />
           <Route path='/login' render={ () => <Login onLogin={this.onLogin}/> } />
           <Route path='/register' component={Register} />

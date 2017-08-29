@@ -15,7 +15,13 @@ class ClassDetails extends Component {
       modalTitle: '',
       showModal: false,
       skillProf: [],
-      subClasss: "",
+      subClass: "",
+      subRace: "",
+      alignment: "",
+      background: "",
+      level: 1,
+      name: "",
+      bio: "",
       class: {
         proficiencies: [],
         proficiency_choices: [{
@@ -28,8 +34,25 @@ class ClassDetails extends Component {
           name: "",
           url: ""
         }]
+      },
+      race:{
+        ability_bonuses: [],
+        traits: [{
+          name: "",
+          url: ""
+        }],
+        subraces:[{
+          name:"",
+          url: ""
+        }],
+        starting_proficiencies: [{
+          name: "",
+          url: ""
+        }],
+        size: "",
+        speed: "",
 
-      }
+      },
     }
     this.calcMod = this.calcMod.bind(this)
     this.fetchAbilityScoreInfo = this.fetchAbilityScoreInfo.bind(this)
@@ -37,14 +60,22 @@ class ClassDetails extends Component {
     this.handleSubClassFetch = this.handleSubClassFetch.bind(this)
     this.handleSubClassCheckBox = this.handleSubClassCheckBox.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubRaceFetch = this.handleSubRaceFetch.bind(this)
+    this.calcHP = this.calcHP.bind(this)
   }
 
   componentDidMount(){
     fetch(`http://www.dnd5eapi.co/api/classes/${this.props.match.params.classID}`)
     .then(r => r.json())
     .then(json => {
-      console.log(json);
+      console.log('class json',json);
       this.setState({class: json})
+    })
+    fetch(`http://www.dnd5eapi.co/api/races/${this.props.match.params.raceID}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log('race json',json);
+      this.setState({race: json})
     })
   }
 
@@ -55,6 +86,20 @@ class ClassDetails extends Component {
       return 10
     }
     return Math.floor((num-10)/2)
+  }
+
+  calcHP(hitDie, level, conMod){
+
+    if(typeof conMod === 'string'){
+      return <i><strong>Enter Constitution to calculate HP</strong></i>
+    }
+      let hp = 0;
+
+      hp += hitDie + conMod
+      if(level > 1){
+        hp += ((hitDie/2 + 1) + conMod) * (level - 1)
+      }
+      return hp
   }
 
   fetchAbilityScoreInfo(e){
@@ -82,6 +127,19 @@ class ClassDetails extends Component {
     })
   }
 
+  handleSubRaceFetch(e){
+    fetch(`${e.target.id}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log(json);
+      this.setState({
+        modalText: json.desc,
+        modalTitle: json.name,
+        showModal: true
+      })
+    })
+  }
+
   handleProfCheckBox(e){
     let skillProf = this.state.skillProf
     let splice = false
@@ -101,6 +159,9 @@ class ClassDetails extends Component {
       skillProf.push(e.target.value)
     }
     console.log('this.state.skillProf',skillProf);
+    this.setState({
+      skillProf: skillProf
+    })
   }
 
   handleSubClassCheckBox(e){
@@ -121,14 +182,61 @@ class ClassDetails extends Component {
         <h2>This is the class Details page</h2>
 
         <form onSubmit={this.handleSubmit}>
-        <h3>You chose a {this.state.class.name}</h3>
+        <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
+
+        <label>Name:</label>
+        <input type="text" onChange={e => this.setState({name: e.target.value})} value={this.state.name}/>
+
+        <label>Level:</label>
+        <input type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>
+
+        <label>Background:</label>
+        <input type="text" onChange={e => this.setState({background: e.target.value})} value={this.state.background}/>
+        <label>Size:</label>
+        <input type="text" value={this.state.race.size}/>
+        <label>Speed:</label>
+        <input type="text" value={this.state.race.speed}/>
+        <label>Alignment:</label>
+        <select onChange={e => this.setState({alignment: e.target.value})} >
+          <option value=""></option>
+          <option value="Lawful Good">Lawful Good</option>
+          <option value="Neutral Good">Neutral Good</option>
+          <option value="Chaotic Good">Chaotic Good</option>
+          <option value="Lawful Neutral">Lawful Neutral</option>
+          <option value="Neutral">Neutral</option>
+          <option value="Chaotic Neutral">Chaotic Neutral</option>
+          <option value="Lawful Evil">Lawful Evil</option>
+          <option value="Neutral Evil">Neutral Evil</option>
+          <option value="Chaotic Evil">Chaotic Evil</option>
+        </select>
+
         <p>Your hit die is a d{this.state.class.hit_die}</p>
+        <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
         <h4>Armor and Weapon Profeciencies</h4>
         <ul>
           {this.state.class.proficiencies.map((prof, index) => {
             return(
               <div key={index}>
                 <li>{prof.name}</li>
+              </div>
+            )
+          })}
+        </ul>
+        <h4>Profeciencies from your race</h4>
+        <ul>
+          {this.state.race.starting_proficiencies.map((prof, index) =>{
+            return(
+              <div key={index}><li>{prof.name}</li></div>
+            )
+          })}
+        </ul>
+        <h4>Additional traits from your race</h4>
+        <ul>
+          {this.state.race.traits.map((traits, index) => {
+            return(
+              <div key={index}>
+                <li id={traits.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{traits.name}
+                </li>
               </div>
             )
           })}
@@ -147,13 +255,23 @@ class ClassDetails extends Component {
         </fieldset>
         <fieldset>
           <legend>
-            Options for subclasses
+            Options for subclasses and subraces
           </legend>
+          <h4>Subclasses: </h4>
           {this.state.class.subclasses.map((sc, index) => {
             return(
               <div key={index} >
                 <input type="radio" value={sc.name} onChange={this.handleSubClassCheckBox}/>
                 <label id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</label>
+              </div>
+            )
+          })}
+          <h4>Subraces:</h4>
+          {this.state.race.subraces.map((sr, index) => {
+            return(
+              <div key={index}>
+                <input type="radio" value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
+                <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
               </div>
             )
           })}
@@ -171,6 +289,7 @@ class ClassDetails extends Component {
                 <tr>
                   <th>Stat Name</th>
                   <th>Value</th>
+                  <th>Bonus from Race</th>
                   <th>Modifier</th>
                 </tr>
               </thead>
@@ -178,30 +297,39 @@ class ClassDetails extends Component {
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='1' style={{cursor: 'pointer'}}> Strength </td>
                   <td><input type='text' onChange={e => this.setState({str: e.target.value})} value={this.state.str}/></td>
+                  <td>{this.state.race.ability_bonuses[0]}</td>
                   <td>{this.calcMod(this.state.str)}</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='2' style={{cursor: 'pointer'}}>Dexterity</td>
                   <td><input type='text' onChange={e => this.setState({dex: e.target.value})} value={this.state.dex} /></td>
+                  <td>{this.state.race.ability_bonuses[1]}</td>
                   <td>{this.calcMod(this.state.dex)}</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='3' style={{cursor: 'pointer'}}>Constitution</td>
                   <td><input type='text' onChange={e => this.setState({con: e.target.value})} value={this.state.con} /></td>
+                  <td>{this.state.race.ability_bonuses[2]}</td>
                   <td>{this.calcMod(this.state.con)}</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='4' style={{cursor: 'pointer'}}>Intelligence</td>
                   <td><input type='text' onChange={e => this.setState({int: e.target.value})} value={this.state.int} /></td>
+                  <td>{this.state.race.ability_bonuses[3]}</td>
                   <td>{this.calcMod(this.state.int)}</td>
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Wisdom</td>
                   <td><input type='text' onChange={e => this.setState({wis: e.target.value})} value={this.state.wis} /></td>
+                  <td>{this.state.race.ability_bonuses[4]}</td>
                   <td>{this.calcMod(this.state.wis)}</td>
                 </tr>
               </tbody>
             </table>
+          </fieldset>
+          <fieldset>
+            <legend>Bio</legend>
+            <textarea onChange={e => this.setState({bio: e.target.value})} value={this.state.bio} placeholder="Where did your character come from?"></textarea>
           </fieldset>
           <button type="submit">Create Character!</button>
         </form>

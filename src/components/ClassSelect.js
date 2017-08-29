@@ -7,7 +7,10 @@ class CharCreate extends Component {
     this.state = {
       classes: [],
       classID: null,
-      classSelected: false
+      classSelected: false,
+      races: [],
+      raceID: "",
+      raceSelected: false
     }
     this.handleSubmit = this.handleSubmit.bind(this)
   }
@@ -20,18 +23,27 @@ class CharCreate extends Component {
         classes: json.results
       })
     })
+    fetch('http://www.dnd5eapi.co/api/races')
+    .then(r => r.json())
+    .then(json => {
+      console.log('json of races',json);
+      this.setState({
+        races: json.results
+      })
+    })
   }
 
   handleSubmit(e){
     e.preventDefault()
     this.setState({
-      classSelected: true
+      classSelected: true,
+      raceSelected: true
     })
   }
 
   render() {
-    if(this.state.classSelected){
-      return <Redirect to={'/dashboard/charcreate/' + this.state.classID} />
+    if(this.state.classSelected && this.state.raceSelected){
+      return <Redirect to={'/dashboard/charcreate/' + this.state.classID + '/' + this.state.raceID} />
     }
     return (
       <div>
@@ -45,6 +57,14 @@ class CharCreate extends Component {
               )
             })}
 
+          </select>
+          <select onChange={e => this.setState({raceID: e.target.value})}>
+            <option value=""></option>
+            {this.state.races.map((races, index) => {
+              return(
+                <option key={index} value={races.url.substring(races.url.lastIndexOf('/') +1)}>{races.name}</option>
+              )
+            })}
           </select>
           <button type="submit">Select Class</button>
         </form>
