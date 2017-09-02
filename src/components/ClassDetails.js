@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {Modal, Button} from 'react-bootstrap'
-
+import localStorage from "local-storage"
 
 class ClassDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      token: "",
       str: "",
       dex: "",
       con: "",
@@ -65,18 +66,22 @@ class ClassDetails extends Component {
   }
 
   componentDidMount(){
+    this.setState({
+      token: localStorage.get("JWT")
+    })
     fetch(`http://www.dnd5eapi.co/api/classes/${this.props.match.params.classID}`)
     .then(r => r.json())
     .then(json => {
-      console.log('class json',json);
+      // console.log('class json',json);
       this.setState({class: json})
     })
     fetch(`http://www.dnd5eapi.co/api/races/${this.props.match.params.raceID}`)
     .then(r => r.json())
     .then(json => {
-      console.log('race json',json);
+      // console.log('race json',json);
       this.setState({race: json})
     })
+
   }
 
   calcMod(num){
@@ -172,11 +177,51 @@ class ClassDetails extends Component {
 
   handleSubmit(e){
     e.preventDefault()
-    console.log("working on it...");
+    fetch('http://localhost:4000/api/user/char/create', {
+      method: "POST",
+      body: JSON.stringify({
+        str: this.state.str,
+        dex: this.state.dex,
+        con: this.state.con,
+        int: this.state.int,
+        wis: this.state.wis,
+      }),
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      console.log('the response', json);
+    })
   }
+
+  // handleSubmit(e){
+  //   e.preventDefault()
+  //   console.log(this.state)
+  //   fetch('http://localhost:4000/api/authenticate', {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       email: this.state.email,
+  //       password: this.state.password
+  //     }),
+  //     headers: {
+  //       'content-type': 'application/json'
+  //     }
+  //   })
+  //   .then(r => r.json())
+  //   .then(json => {
+  //     console.log('json in the login page', json)
+  //     localStorage.set("JWT", json.token)
+  //     this.setState({redirect: true})
+  //
+  //   })
+  // }
 
   render() {
 
+    console.log('JWT in the state', this.state.token);
     return (
       <div>
         <h2>This is the class Details page</h2>
