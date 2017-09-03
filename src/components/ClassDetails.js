@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Modal, Button} from 'react-bootstrap'
+import {Redirect} from 'react-router-dom'
 import localStorage from "local-storage"
 
 class ClassDetails extends Component {
@@ -7,11 +8,11 @@ class ClassDetails extends Component {
     super(props);
     this.state = {
       token: "",
-      str: "",
-      dex: "",
-      con: "",
-      int: "",
-      wis: "",
+      str: undefined,
+      dex: undefined,
+      con: undefined,
+      int: undefined,
+      wis: undefined,
       modalText: '',
       modalTitle: '',
       showModal: false,
@@ -21,8 +22,9 @@ class ClassDetails extends Component {
       alignment: "",
       background: "",
       level: 1,
-      name: "",
+      charName: undefined,
       bio: "",
+      createChar: false,
       class: {
         proficiencies: [],
         proficiency_choices: [{
@@ -180,11 +182,20 @@ class ClassDetails extends Component {
     fetch('http://localhost:4000/api/user/char/create', {
       method: "POST",
       body: JSON.stringify({
+        charName: this.state.charName,
+        race: this.props.match.params.raceID,
+        class: this.props.match.params.classID,
         str: this.state.str,
         dex: this.state.dex,
         con: this.state.con,
         int: this.state.int,
         wis: this.state.wis,
+        subClass: this.state.subClass,
+        subRace: this.state.subRace,
+        alignment: this.state.alignment,
+        background: this.state.background,
+        level: this.state.level,
+        skillProf: this.state.skillProf,
       }),
       headers: {
         'token': this.state.token,
@@ -193,44 +204,27 @@ class ClassDetails extends Component {
     })
     .then(r => r.json())
     .then(json => {
-      console.log('the response', json);
+      console.log('the response', json)
+      if(json.success){
+        this.setState({
+          createChar: true
+        })
+      }
     })
   }
 
-  // handleSubmit(e){
-  //   e.preventDefault()
-  //   console.log(this.state)
-  //   fetch('http://localhost:4000/api/authenticate', {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       email: this.state.email,
-  //       password: this.state.password
-  //     }),
-  //     headers: {
-  //       'content-type': 'application/json'
-  //     }
-  //   })
-  //   .then(r => r.json())
-  //   .then(json => {
-  //     console.log('json in the login page', json)
-  //     localStorage.set("JWT", json.token)
-  //     this.setState({redirect: true})
-  //
-  //   })
-  // }
-
   render() {
-
-    console.log('JWT in the state', this.state.token);
+    if(this.state.createChar){
+      return <Redirect to='/dashboard' />
+    }
     return (
       <div>
         <h2>This is the class Details page</h2>
 
         <form onSubmit={this.handleSubmit}>
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
-
-        <label>Name:</label>
-        <input type="text" onChange={e => this.setState({name: e.target.value})} value={this.state.name}/>
+        <label>Character Name:</label>
+        <input type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
 
         <label>Level:</label>
         <input type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>

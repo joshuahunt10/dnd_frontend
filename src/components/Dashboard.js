@@ -6,7 +6,9 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state={
-      signout: false
+      signout: false,
+      token: "",
+      charArray: [],
     }
     this.logout = this.logout.bind(this)
   }
@@ -17,13 +19,35 @@ class Dashboard extends Component {
     this.setState({signout: true})
   }
 
+  componentWillMount(){
+    this.setState({
+      token: localStorage.get("JWT")
+    })
+  }
 
-//Here do I do a componentDidMount and send the token to the api which then decodes it and find the email then searches the DB for that user and uses include for tables and characters and sends that back as a json to display here?
+  componentDidMount(){
+    fetch('http://localhost:4000/api/user', {
+      method: "GET",
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      console.log(json);
+      this.setState({
+        charArray: json.Characters
+      })
+    })
+  }
+
 
   render() {
     if(this.state.signout){
       return <Redirect to='/' />
     }
+    console.log(this.state);
     return (
       <div>
         <nav>
@@ -32,7 +56,12 @@ class Dashboard extends Component {
         </nav>
         <button onClick={this.logout}>Log Out</button>
         <h2>This is the user Dashboard</h2>
-        {/* <p>{localStorage.get("JWT")}</p> */}
+        <h4>Character List</h4>
+        <ul>
+        {this.state.charArray.map((char) => {
+          return <li key={char.id}>{char.charName}</li>
+        })}
+        </ul>
       </div>
     );
   }
