@@ -42,7 +42,6 @@ class Dashboard extends Component {
     })
   }
 
-
   render() {
     if(this.state.signout){
       return <Redirect to='/' />
@@ -52,16 +51,19 @@ class Dashboard extends Component {
       <div>
         <nav>
           <Link to='/dashboard/charcreate'>Create a Character</Link> ||
-          <Link to='/dashboard/tables'>Play a game</Link>
+          <Link to='/dashboard/tables'> Create a Game!</Link>
         </nav>
         <button onClick={this.logout}>Log Out</button>
-        <h2>This is the user Dashboard</h2>
-        <h4>Character List</h4>
-        <ul>
-        {this.state.charArray.map((char) => {
-          return <li key={char.id}>{char.charName}</li>
-        })}
-        </ul>
+        <div>
+          <h2>This is the user Dashboard</h2>
+          <h4>Character List</h4>
+          <ul>
+            {this.state.charArray.map((char) => {
+              return <li key={char.id}>{char.charName}</li>
+            })}
+          </ul>
+        </div>
+
       </div>
     );
   }
