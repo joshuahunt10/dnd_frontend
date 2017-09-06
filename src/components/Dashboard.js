@@ -9,6 +9,7 @@ class Dashboard extends Component {
       signout: false,
       token: "",
       charArray: [],
+      gameArray: []
     }
     this.logout = this.logout.bind(this)
   }
@@ -26,7 +27,21 @@ class Dashboard extends Component {
   }
 
   componentDidMount(){
-    fetch('http://localhost:4000/api/user', {
+    // fetch('http://localhost:4000/api/user', {
+    //   method: "GET",
+    //   headers: {
+    //     'token': this.state.token,
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    // .then(r => r.json())
+    // .then(json => {
+    //   console.log(json);
+    //   this.setState({
+    //     charArray: json.Characters
+    //   })
+    // })
+    fetch('http://localhost:4000/api/games', {
       method: "GET",
       headers: {
         'token': this.state.token,
@@ -35,9 +50,8 @@ class Dashboard extends Component {
     })
     .then(r => r.json())
     .then(json => {
-      console.log(json);
       this.setState({
-        charArray: json.Characters
+        gameArray: json
       })
     })
   }
@@ -56,10 +70,14 @@ class Dashboard extends Component {
         <button onClick={this.logout}>Log Out</button>
         <div>
           <h2>This is the user Dashboard</h2>
-          <h4>Character List</h4>
+          <h4>Game List</h4>
           <ul>
-            {this.state.charArray.map((char) => {
-              return <li key={char.id}>{char.charName}</li>
+            {this.state.gameArray.map((game) => {
+              return (
+                <Link to={`/dashboard/game/${game.id}`}>
+                <li key={game.id}>{game.title}</li>
+              </Link>
+              )
             })}
           </ul>
         </div>

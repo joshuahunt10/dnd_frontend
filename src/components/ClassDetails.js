@@ -196,6 +196,7 @@ class ClassDetails extends Component {
         background: this.state.background,
         level: this.state.level,
         skillProf: this.state.skillProf,
+        GameId: this.props.match.params.gameId
       }),
       headers: {
         'token': this.state.token,
@@ -217,6 +218,7 @@ class ClassDetails extends Component {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
+    console.log('props on classDetails',this.props);
     return (
       <div>
         <h2>This is the class Details page</h2>

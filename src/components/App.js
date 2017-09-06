@@ -9,6 +9,7 @@ import Dashboard from './Dashboard'
 import Splash from './Splash'
 import ClassSelect from './ClassSelect'
 import GameTables from './GameTables'
+import GameConfig from './GameConfig'
 // import UserLayout from './UserLayout'
 import ClassDetails from './ClassDetails'
 import '../styles/App.css';
@@ -20,8 +21,9 @@ class App extends Component {
       <BrowserRouter>
         <BaseLayout>
           <AuthenticatedRoute path='/dashboard'  component={Dashboard} />
-          <AuthenticatedRoute path='/dashboard/charcreate' component={ClassSelect} />
-          <AuthenticatedRoute path ='/dashboard/charcreate/:classID/:raceID' component={ClassDetails} />
+          <AuthenticatedRoute path='/dashboard/charcreate/:gameId' component={ClassSelect} />
+          <AuthenticatedRoute path='/dashboard/game/:gameId' component={GameConfig} />
+          <AuthenticatedRoute path ='/dashboard/charcreate/:gameId/:classID/:raceID' component={ClassDetails} />
           <AuthenticatedRoute path='/dashboard/tables' component={GameTables} />
           <Route path='/login' render={ () => <Login onLogin={this.onLogin}/> } />
           <Route path='/register' component={Register} />

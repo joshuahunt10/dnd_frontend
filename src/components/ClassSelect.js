@@ -43,8 +43,9 @@ class CharCreate extends Component {
 
   render() {
     if(this.state.classSelected && this.state.raceSelected){
-      return <Redirect to={'/dashboard/charcreate/' + this.state.classID + '/' + this.state.raceID} />
+      return <Redirect to={`/dashboard/charcreate/${this.props.match.params.gameId}/${this.state.classID}/${this.state.raceID}`}/>
     }
+
     return (
       <div>
         <h2>This is the form to create a character</h2>
