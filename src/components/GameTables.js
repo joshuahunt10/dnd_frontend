@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import localStorage from 'local-storage'
+import {Redirect} from 'react-router-dom'
 
 class GameTables extends Component {
   constructor(props) {
     super(props);
     this.state = {
       token:"",
-      gameTitle: ""
+      gameTitle: "",
+      gameCreated: false
 
     }
     this.handleCreateGame = this.handleCreateGame.bind(this)
@@ -33,10 +35,16 @@ class GameTables extends Component {
     .then(r => r.json())
     .then(json => {
       console.log(json);
+      this.setState({
+        gameCreated: json.gameCreated
+      })
     })
   }
 
   render() {
+    if(this.state.gameCreated){
+      return <Redirect to='/dashboard' />
+    }
     return (
       <div>
         <h2>This page will display the game tables.</h2>

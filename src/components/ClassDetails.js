@@ -8,11 +8,12 @@ class ClassDetails extends Component {
     super(props);
     this.state = {
       token: "",
-      str: undefined,
-      dex: undefined,
-      con: undefined,
-      int: undefined,
-      wis: undefined,
+      str: "",
+      dex: "",
+      con: "",
+      int: "",
+      wis: "",
+      cha: "",
       modalText: '',
       modalTitle: '',
       showModal: false,
@@ -190,11 +191,13 @@ class ClassDetails extends Component {
         con: this.state.con,
         int: this.state.int,
         wis: this.state.wis,
+        cha: this.state.cha,
         subClass: this.state.subClass,
         subRace: this.state.subRace,
         alignment: this.state.alignment,
         background: this.state.background,
         level: this.state.level,
+        bio: this.state.bio,
         skillProf: this.state.skillProf,
         GameId: this.props.match.params.gameId
       }),
@@ -218,7 +221,6 @@ class ClassDetails extends Component {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
-    console.log('props on classDetails',this.props);
     return (
       <div>
         <h2>This is the class Details page</h2>
@@ -364,6 +366,12 @@ class ClassDetails extends Component {
                   <td><input type='text' onChange={e => this.setState({wis: e.target.value})} value={this.state.wis} /></td>
                   <td>{this.state.race.ability_bonuses[4]}</td>
                   <td>{this.calcMod(this.state.wis)}</td>
+                </tr>
+                <tr>
+                  <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Charisma</td>
+                  <td><input type='text' onChange={e => this.setState({cha: e.target.value})} value={this.state.cha} /></td>
+                  <td>{this.state.race.ability_bonuses[5]}</td>
+                  <td>{this.calcMod(this.state.cha)}</td>
                 </tr>
               </tbody>
             </table>
