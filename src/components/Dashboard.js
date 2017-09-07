@@ -7,11 +7,14 @@ class Dashboard extends Component {
     super(props);
     this.state={
       signout: false,
-      token: "",
+      token: localStorage.get("JWT"),
       charArray: [],
-      gameArray: []
+      gameArray: [],
+      userId: ""
     }
     this.logout = this.logout.bind(this)
+    this.fetchAllGames = this.fetchAllGames.bind(this);
+    this.fetchUser = this.fetchUser.bind(this);
   }
 
   logout(e){
@@ -20,27 +23,12 @@ class Dashboard extends Component {
     this.setState({signout: true})
   }
 
-  componentWillMount(){
-    this.setState({
-      token: localStorage.get("JWT")
-    })
-  }
-
   componentDidMount(){
-    // fetch('http://localhost:4000/api/user', {
-    //   method: "GET",
-    //   headers: {
-    //     'token': this.state.token,
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    // .then(r => r.json())
-    // .then(json => {
-    //   console.log(json);
-    //   this.setState({
-    //     charArray: json.Characters
-    //   })
-    // })
+    this.fetchAllGames();
+    this.fetchUser();
+
+  }
+  fetchAllGames(){
     fetch('http://localhost:4000/api/games', {
       method: "GET",
       headers: {
@@ -56,10 +44,27 @@ class Dashboard extends Component {
     })
   }
 
+  fetchUser(){
+    fetch('http://localhost:4000/api/user', {
+      method: "GET",
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      this.setState({
+        userId: json.id
+      })
+    })
+  }
+
   render() {
     if(this.state.signout){
       return <Redirect to='/' />
     }
+
     console.log(this.state);
     return (
       <div>
@@ -73,10 +78,18 @@ class Dashboard extends Component {
           <h4>Game List</h4>
           <ul>
             {this.state.gameArray.map((game) => {
+              let thisClass = ""
+              if (game.adminUserId === this.state.userId){
+                thisClass = "adminStyling"
+              }
               return (
-                <Link to={`/dashboard/game/${game.id}`}>
-                <li key={game.id}>{game.title}</li>
-              </Link>
+
+                <li key={game.id}>
+                  <Link className={thisClass} to={`/dashboard/game/${game.id}`}>
+                  {game.title}
+                  </Link>
+                </li>
+
               )
             })}
           </ul>

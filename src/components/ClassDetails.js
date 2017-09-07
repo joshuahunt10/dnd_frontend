@@ -322,7 +322,7 @@ class ClassDetails extends Component {
             <h4>Saving Throws</h4>
             {this.state.class.saving_throws.map((stat, index) => {
               return(
-                <span> {stat.name}</span>
+                <span key={index}> {stat.name}</span>
               )
             })}
             <table>
