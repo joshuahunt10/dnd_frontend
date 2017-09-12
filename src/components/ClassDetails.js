@@ -3,6 +3,10 @@ import {Modal, Button} from 'react-bootstrap'
 import {Redirect} from 'react-router-dom'
 import localStorage from "local-storage"
 
+function calcSpellSave(stat){
+
+}
+
 class ClassDetails extends Component {
   constructor(props) {
     super(props);
@@ -25,9 +29,23 @@ class ClassDetails extends Component {
       level: 1,
       charName: undefined,
       bio: "",
+      spellcastingAbility: "",
+      spellSlots: {
+        one: 999,
+        two: 0,
+        three: 0,
+        four: 0,
+        five: 0,
+        six: 0,
+        seven: 0,
+        eight: 0,
+        nine: 0
+      },
+      spellList: "",
       createChar: false,
       class: {
         proficiencies: [],
+        name: "",
         proficiency_choices: [{
           from: []
         }],
@@ -40,6 +58,7 @@ class ClassDetails extends Component {
         }]
       },
       race:{
+        name:"",
         ability_bonuses: [],
         traits: [{
           name: "",
@@ -66,6 +85,8 @@ class ClassDetails extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleSubRaceFetch = this.handleSubRaceFetch.bind(this)
     this.calcHP = this.calcHP.bind(this)
+    this.increaseStat = this.increaseStat.bind(this)
+    this.decreaseStat = this.decreaseStat.bind(this)
   }
 
   componentDidMount(){
@@ -75,13 +96,25 @@ class ClassDetails extends Component {
     fetch(`http://www.dnd5eapi.co/api/classes/${this.props.match.params.classID}`)
     .then(r => r.json())
     .then(json => {
-      // console.log('class json',json);
+      console.log('class json',json);
       this.setState({class: json})
+      if(this.state.class.spellcasting){
+        console.log('spallcasting here');
+        fetch(`${this.state.class.spellcasting.url}`)
+        .then(r => r.json())
+        .then(json => {
+          console.log('spellcasting',json);
+          this.setState({
+            spellcastingAbility: json.spellcasting_ability.name
+          })
+        })
+      }
+
     })
     fetch(`http://www.dnd5eapi.co/api/races/${this.props.match.params.raceID}`)
     .then(r => r.json())
     .then(json => {
-      // console.log('race json',json);
+      console.log('race json',json);
       this.setState({race: json})
     })
 
@@ -184,8 +217,10 @@ class ClassDetails extends Component {
       method: "POST",
       body: JSON.stringify({
         charName: this.state.charName,
-        race: this.props.match.params.raceID,
-        class: this.props.match.params.classID,
+        raceId: this.props.match.params.raceID,
+        classId: this.props.match.params.classID,
+        raceName: this.state.race.name,
+        className: this.state.class.name,
         str: this.state.str,
         dex: this.state.dex,
         con: this.state.con,
@@ -200,6 +235,16 @@ class ClassDetails extends Component {
         bio: this.state.bio,
         skillProf: this.state.skillProf,
         hitDie: this.state.class.hit_die,
+        one: this.state.spellSlots.one,
+        two: this.state.spellSlots.two,
+        three: this.state.spellSlots.three,
+        four: this.state.spellSlots.four,
+        five: this.state.spellSlots.five,
+        six: this.state.spellSlots.six,
+        seven: this.state.spellSlots.seven,
+        eight: this.state.spellSlots.eight,
+        nine: this.state.spellSlots.nine,
+        spellList: this.state.spellList,
         GameId: this.props.match.params.gameId
       }),
       headers: {
@@ -218,15 +263,106 @@ class ClassDetails extends Component {
     })
   }
 
+  increaseStat(stat){
+    let val = this.state.spellSlots[stat]
+    this.setState({
+      spellSlots:{
+        ...this.state.spellSlots,
+        [stat]: val + 1
+      }
+    })
+  }
+
+  decreaseStat(stat){
+    let val = this.state.spellSlots[stat]
+    this.setState({
+      spellSlots:{
+        ...this.state.spellSlots,
+        [stat]: val - 1
+      }
+    })
+  }
+
   render() {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
+    let spellcastingDiv = <div></div>
+    if(this.state.spellcastingAbility){
+      spellcastingDiv = (
+        <fieldset>
+          <legend>Spellcasting</legend>
+          <p>Your spellist can be found in the PHB (players handbook) starting on page 207</p>
+          <p>Your spellcasting modifier is <strong>{this.state.spellcastingAbility}</strong></p>
+          <p>Your spell save DC is 8 + {this.state.spellcastingAbility} modifier + proficiency bonus</p>
+          <p>Your spellcasting attack modifier is your {this.state.spellcastingAbility} modifier + proficiency bonus</p>
+          <label>Spells prepared:</label>
+          <textarea onChange={e => this.setState({spellList: e.target.value})} value={this.state.spellList} placeholder="List of spells"></textarea>
+          <table>
+            <thead>
+              <tr>
+                <th>Spell Slot Level</th>
+                <th>Number of Slots</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>{this.state.spellSlots.one}</td>
+                <td><button onClick={() => this.increaseStat("one")}>+</button> <button onClick={() => this.decreaseStat("one")}>-</button></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>{this.state.spellSlots.two}</td>
+                <td><button onClick={() => this.increaseStat("two")}>+</button> <button onClick={() => this.decreaseStat("two")}>-</button></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>{this.state.spellSlots.three}</td>
+                <td><button onClick={() => this.increaseStat("three")}>+</button> <button onClick={() => this.decreaseStat("three")}>-</button></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>{this.state.spellSlots.four}</td>
+                <td><button onClick={() => this.increaseStat("four")}>+</button> <button onClick={() => this.decreaseStat("four")}>-</button></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>{this.state.spellSlots.five}</td>
+                <td><button onClick={() => this.increaseStat("five")}>+</button> <button onClick={() => this.decreaseStat("five")}>-</button></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>{this.state.spellSlots.six}</td>
+                <td><button onClick={() => this.increaseStat("six")}>+</button> <button onClick={() => this.decreaseStat("six")}>-</button></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>{this.state.spellSlots.seven}</td>
+                <td><button onClick={() => this.increaseStat("seven")}>+</button> <button onClick={() => this.decreaseStat("seven")}>-</button></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>{this.state.spellSlots.eight}</td>
+                <td><button onClick={() => this.increaseStat("eight")}>+</button> <button onClick={() => this.decreaseStat("eight")}>-</button></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>{this.state.spellSlots.nine}</td>
+                <td><button onClick={() => this.increaseStat("nine")}>+</button> <button onClick={() => this.decreaseStat("nine")}>-</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      )
+    }
+
+    //create a section that is called spellcasting.  List the spellcasting modifier.  Possibly list the spell saves and spell modifiers.  Refer to page in the PHB for spell lists.  Have a text area that the user can enter spells in to.  Have an area to increase the number of spell slots for each level.  Save those into the db as an object.
     return (
       <div>
         <h2>This is the class Details page</h2>
 
-        <form onSubmit={this.handleSubmit}>
+
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
         <label>Character Name:</label>
         <input type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
@@ -381,6 +517,8 @@ class ClassDetails extends Component {
             <legend>Bio</legend>
             <textarea onChange={e => this.setState({bio: e.target.value})} value={this.state.bio} placeholder="Where did your character come from?"></textarea>
           </fieldset>
+          {spellcastingDiv}
+        <form onSubmit={this.handleSubmit}>
           <button type="submit">Create Character!</button>
         </form>
          <Modal show={this.state.showModal} onHide={this.close}>

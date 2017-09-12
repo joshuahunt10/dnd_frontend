@@ -38,7 +38,22 @@ class GameCharDetails extends Component {
       currentHP: "",
       level: "",
       hitDie: "",
-      name: ""
+      name: "",
+      className: "",
+      raceName: "",
+      background: "",
+      bio: "",
+      skillProf: [],
+      one: 999,
+      two: 0,
+      three: 0,
+      four: 0,
+      five: 0,
+      six: 0,
+      seven: 0,
+      eight: 0,
+      nine: 0,
+      spellList: ""
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.increaseStat = this.increaseStat.bind(this)
@@ -49,6 +64,8 @@ class GameCharDetails extends Component {
   componentDidMount(){
     this.fetchOneChar()
   }
+
+
 
   fetchOneChar(){
     fetch(`http://localhost:4000/api/user/onechar`,{
@@ -74,7 +91,22 @@ class GameCharDetails extends Component {
         currentHP: json.currentHP,
         level: json.level,
         hitDie: json.hitDie,
-        charName: json.charName
+        charName: json.charName,
+        raceName: json.raceName,
+        className: json.className,
+        background: json.background,
+        bio: json.bio,
+        skillProf: json.skillProf,
+        one: json.one,
+        two: json.two,
+        three: json.three,
+        four: json.four,
+        five: json.five,
+        six: json.six,
+        seven: json.seven,
+        eight: json.eight,
+        nine: json.nine,
+        spellList: json.spellList
       })
     })
   }
@@ -117,12 +149,81 @@ class GameCharDetails extends Component {
   render() {
     let char = this.state
     let hp = calcHP(char.hitDie, char.level, calcMod(char.con))
+    let spellcastingDiv = <div></div>
+    if(this.state.one !== 999){
+      spellcastingDiv = (
+        <fieldset>
+          <legend>Spellcasting</legend>
+          <p>Your spellist can be found in the PHB (players handbook) starting on page 207</p>
+          <p>Your spellcasting modifier is <strong>{this.state.spellcastingAbility}</strong></p>
+          <p>Your spell save DC is 8 + {this.state.spellcastingAbility} modifier + proficiency bonus</p>
+          <p>Your spellcasting attack modifier is your {this.state.spellcastingAbility} modifier + proficiency bonus</p>
+          <label>Spells prepared:</label>
+          <textarea onChange={e => this.setState({spellList: e.target.value})} value={this.state.spellList} placeholder="List of spells"></textarea>
+          <table>
+            <thead>
+              <tr>
+                <th>Spell Slot Level</th>
+                <th>Number of Slots</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>{this.state.one}</td>
+                <td><button onClick={() => this.increaseStat("one")}>+</button> <button onClick={() => this.decreaseStat("one")}>-</button></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>{this.state.two}</td>
+                <td><button onClick={() => this.increaseStat("two")}>+</button> <button onClick={() => this.decreaseStat("two")}>-</button></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>{this.state.three}</td>
+                <td><button onClick={() => this.increaseStat("three")}>+</button> <button onClick={() => this.decreaseStat("three")}>-</button></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>{this.state.four}</td>
+                <td><button onClick={() => this.increaseStat("four")}>+</button> <button onClick={() => this.decreaseStat("four")}>-</button></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>{this.state.five}</td>
+                <td><button onClick={() => this.increaseStat("five")}>+</button> <button onClick={() => this.decreaseStat("five")}>-</button></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>{this.state.six}</td>
+                <td><button onClick={() => this.increaseStat("six")}>+</button> <button onClick={() => this.decreaseStat("six")}>-</button></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>{this.state.seven}</td>
+                <td><button onClick={() => this.increaseStat("seven")}>+</button> <button onClick={() => this.decreaseStat("seven")}>-</button></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>{this.state.eight}</td>
+                <td><button onClick={() => this.increaseStat("eight")}>+</button> <button onClick={() => this.decreaseStat("eight")}>-</button></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>{this.state.nine}</td>
+                <td><button onClick={() => this.increaseStat("nine")}>+</button> <button onClick={() => this.decreaseStat("nine")}>-</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      )
+    }
     return (
       <div>
 
           <h4>details on the character</h4>
           <p>Character Name: {char.charName}</p>
-          <p>You are playing a </p>
+          <p>You are playing a {char.raceName} {char.className} with the background of {char.background}.  Your story is: <br /> {char.bio}</p>
           <p>Level: {char.level} <button onClick={() => this.increaseStat("level")}>+</button> <button onClick={() => this.decreaseStat("level")}>-</button></p>
           <p>Max HP: {hp}</p>
           <p>Current HP: <input onChange={e => this.setState({currentHP: e.target.value})} value={this.state.currentHP}/></p>
@@ -174,6 +275,13 @@ class GameCharDetails extends Component {
               </tr>
             </tbody>
           </table>
+          <h4>Proficiencies:</h4>
+          <ul>
+            {char.skillProf.map((skill) => <li>{skill}</li>)}
+          </ul>
+
+          {spellcastingDiv}
+
           <form onSubmit={this.handleSubmit}>
         <button type="submit">Update Character Sheet</button>
         </form>
