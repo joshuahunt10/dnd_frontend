@@ -199,6 +199,7 @@ class ClassDetails extends Component {
         level: this.state.level,
         bio: this.state.bio,
         skillProf: this.state.skillProf,
+        hitDie: this.state.class.hit_die,
         GameId: this.props.match.params.gameId
       }),
       headers: {
