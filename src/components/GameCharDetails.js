@@ -53,18 +53,58 @@ class GameCharDetails extends Component {
       seven: 0,
       eight: 0,
       nine: 0,
-      spellList: ""
+      spellList: "",
+      classId: 0,
+      raceId: 0,
+      subRace: "",
+      subClass: "",
+      race: {
+        size: "",
+        speed: 0,
+        starting_proficiencies: [],
+      },
+      class: {
+        proficiencies: []
+      }
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.increaseStat = this.increaseStat.bind(this)
     this.decreaseStat = this.decreaseStat.bind(this)
     this.fetchOneChar = this.fetchOneChar.bind(this)
+    this.fetchCharAPI = this.fetchCharAPI.bind(this)
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.fetchOneChar()
   }
 
+  fetchCharAPI(classID, raceID){
+    fetch(`http://www.dnd5eapi.co/api/classes/${classID}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log('class json',json);
+      this.setState({class: json})
+      // if(this.state.class.spellcasting){
+      //   console.log('spallcasting here');
+      //   fetch(`${this.state.class.spellcasting.url}`)
+      //   .then(r => r.json())
+      //   .then(json => {
+      //     console.log('spellcasting',json);
+      //     this.setState({
+      //       spellcastingAbility: json.spellcasting_ability.name
+      //     })
+      //   })
+      // }
+
+    })
+    fetch(`http://www.dnd5eapi.co/api/races/${raceID}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log('race json',json);
+      this.setState({race: json})
+    })
+
+  }
 
 
   fetchOneChar(){
@@ -106,11 +146,20 @@ class GameCharDetails extends Component {
         seven: json.seven,
         eight: json.eight,
         nine: json.nine,
-        spellList: json.spellList
+        spellList: json.spellList,
+        classId: json.classId,
+        raceId: json.raceId,
+        subRace: json.subRace,
+        subClass: json.subClass
+
+      }, () => {
+        console.log('this.state in callback of setState',this.state);
+        this.fetchCharAPI(this.state.classId, this.state.raceId)
       })
     })
-  }
 
+  }
+// this.fetchCharAPI(this.state.classId, this.state.raceId)
   //Create a submit function that will patch to /api/char/update and submits all the stats along with current HP and level.
   handleSubmit(e){
     e.preventDefault()
@@ -147,6 +196,7 @@ class GameCharDetails extends Component {
   }
 
   render() {
+    console.log(this.state);
     let char = this.state
     let hp = calcHP(char.hitDie, char.level, calcMod(char.con))
     let spellcastingDiv = <div></div>
@@ -223,7 +273,9 @@ class GameCharDetails extends Component {
 
           <h4>details on the character</h4>
           <p>Character Name: {char.charName}</p>
-          <p>You are playing a {char.raceName} {char.className} with the background of {char.background}.  Your story is: <br /> {char.bio}</p>
+          <p>You are playing a level {char.level} {char.raceName} {char.className} with the background of {char.background}.  Your background story is: <br /> {char.bio}</p>
+          <p>Size: {char.race.size}</p>
+          <p>Speed: {char.race.speed}</p>
           <p>Level: {char.level} <button onClick={() => this.increaseStat("level")}>+</button> <button onClick={() => this.decreaseStat("level")}>-</button></p>
           <p>Max HP: {hp}</p>
           <p>Current HP: <input onChange={e => this.setState({currentHP: e.target.value})} value={this.state.currentHP}/></p>
@@ -277,8 +329,35 @@ class GameCharDetails extends Component {
           </table>
           <h4>Proficiencies:</h4>
           <ul>
-            {char.skillProf.map((skill) => <li>{skill}</li>)}
+            {char.skillProf.map((skill, index) => <li key={index}>{skill}</li>)}
           </ul>
+          <h4>Armor and Weapon Profeciencies</h4>
+          <ul>
+            {this.state.class.proficiencies.map((prof, index) => {
+              return(
+                <div key={index}>
+                  <li>{prof.name}</li>
+                </div>
+              )
+            })}
+          </ul>
+          <h4>Profeciencies from your race</h4>
+          <ul>
+            {this.state.race.starting_proficiencies.map((prof, index) =>{
+              return(
+                <div key={index}><li>{prof.name}</li></div>
+              )
+            })}
+          </ul>
+          <fieldset>
+            <legend>
+              Options for subclasses and subraces
+            </legend>
+            <h4>Subclass: </h4>
+              <p>{this.state.subClass}</p>
+            <h4>Subrace:</h4>
+            <p>{this.state.subRace}</p>
+          </fieldset>
 
           {spellcastingDiv}
 
