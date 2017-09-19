@@ -18,6 +18,7 @@ class ClassDetails extends Component {
       int: "",
       wis: "",
       cha: "",
+      currentHP: 0,
       modalText: '',
       modalTitle: '',
       showModal: false,
@@ -31,7 +32,7 @@ class ClassDetails extends Component {
       bio: "",
       spellcastingAbility: "",
       spellSlots: {
-        one: 999,
+        one: 0,
         two: 0,
         three: 0,
         four: 0,
@@ -87,6 +88,7 @@ class ClassDetails extends Component {
     this.calcHP = this.calcHP.bind(this)
     this.increaseStat = this.increaseStat.bind(this)
     this.decreaseStat = this.decreaseStat.bind(this)
+    this.handleConInput = this.handleConInput.bind(this)
   }
 
   componentDidMount(){
@@ -130,7 +132,6 @@ class ClassDetails extends Component {
   }
 
   calcHP(hitDie, level, conMod){
-
     if(typeof conMod === 'string'){
       return <i><strong>Enter Constitution to calculate HP</strong></i>
     }
@@ -140,6 +141,7 @@ class ClassDetails extends Component {
       if(level > 1){
         hp += ((hitDie/2 + 1) + conMod) * (level - 1)
       }
+
       return hp
   }
 
@@ -227,6 +229,7 @@ class ClassDetails extends Component {
         int: this.state.int,
         wis: this.state.wis,
         cha: this.state.cha,
+        currentHP: this.state.currentHP,
         subClass: this.state.subClass,
         subRace: this.state.subRace,
         alignment: this.state.alignment,
@@ -281,6 +284,15 @@ class ClassDetails extends Component {
         [stat]: val - 1
       }
     })
+  }
+
+  handleConInput(e){
+    let currentHP = this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(e.target.value))
+    this.setState({
+      con: e.target.value,
+      currentHP: currentHP
+    })
+
   }
 
   render() {
@@ -357,7 +369,6 @@ class ClassDetails extends Component {
       )
     }
 
-    //create a section that is called spellcasting.  List the spellcasting modifier.  Possibly list the spell saves and spell modifiers.  Refer to page in the PHB for spell lists.  Have a text area that the user can enter spells in to.  Have an area to increase the number of spell slots for each level.  Save those into the db as an object.
     return (
       <div>
         <h2>This is the class Details page</h2>
@@ -488,7 +499,7 @@ class ClassDetails extends Component {
                 </tr>
                 <tr>
                   <td onClick={this.fetchAbilityScoreInfo} id='3' style={{cursor: 'pointer'}}>Constitution</td>
-                  <td><input type='text' onChange={e => this.setState({con: e.target.value})} value={this.state.con} /></td>
+                  <td><input type='text' onChange={this.handleConInput} value={this.state.con} /></td>
                   <td>{this.state.race.ability_bonuses[2]}</td>
                   <td>{this.calcMod(this.state.con)}</td>
                 </tr>

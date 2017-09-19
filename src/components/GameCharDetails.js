@@ -29,13 +29,14 @@ class GameCharDetails extends Component {
     super(props);
     this.state = {
       token: localStorage.get("JWT"),
+      id: "",
       str: "",
       dex: "",
       con: "",
       wis: "",
       int: "",
       cha: "",
-      currentHP: "",
+      currentHP: 0,
       level: "",
       hitDie: "",
       name: "",
@@ -64,7 +65,8 @@ class GameCharDetails extends Component {
         starting_proficiencies: [],
       },
       class: {
-        proficiencies: []
+        proficiencies: [],
+        spellcasting: ""
       }
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -84,18 +86,6 @@ class GameCharDetails extends Component {
     .then(json => {
       console.log('class json',json);
       this.setState({class: json})
-      // if(this.state.class.spellcasting){
-      //   console.log('spallcasting here');
-      //   fetch(`${this.state.class.spellcasting.url}`)
-      //   .then(r => r.json())
-      //   .then(json => {
-      //     console.log('spellcasting',json);
-      //     this.setState({
-      //       spellcastingAbility: json.spellcasting_ability.name
-      //     })
-      //   })
-      // }
-
     })
     fetch(`http://www.dnd5eapi.co/api/races/${raceID}`)
     .then(r => r.json())
@@ -122,6 +112,7 @@ class GameCharDetails extends Component {
     .then(json => {
       console.log('json from character details',json);
       this.setState({
+        id: json.id,
         str: json.str,
         dex: json.dex,
         con: json.con,
@@ -164,6 +155,21 @@ class GameCharDetails extends Component {
   handleSubmit(e){
     e.preventDefault()
     console.log('button working');
+    fetch('http://localhost:4000/api/char/update', {
+      method: "PATCH",
+      body: JSON.stringify({
+        currentHP: this.state.currentHP,
+        charId: this.state.id
+      }),
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      console.log('the response', json);
+    })
   }
 
 
@@ -200,7 +206,7 @@ class GameCharDetails extends Component {
     let char = this.state
     let hp = calcHP(char.hitDie, char.level, calcMod(char.con))
     let spellcastingDiv = <div></div>
-    if(this.state.one !== 999){
+    if(this.state.class.spellcasting){
       spellcastingDiv = (
         <fieldset>
           <legend>Spellcasting</legend>
