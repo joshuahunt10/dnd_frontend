@@ -10,15 +10,16 @@ This app is a full stack application using Node.js with Express and a postgreSQL
 * ~~Initial SQL database setup.~~
 * ~~SQL database linked to Node.js to serve up a json~~
 * ~~Initial setup of fetch from backend to client side and displaying~~
-* Think through and white paper the initial schema for the DB
-* Implement the migration for the proposed final DB schema
-* Populate the DB with dummy data
-* Create user registration
-* Create user login with authentication
-* Figure out how to set a session with the user.  Possibly using SQL for persistence
-* Setup fetch to the DnD API using Node.js
-* Create the character creation form using DnD API contents. This will be a dumb page, does not have logic for rules of the game.
-* Get the character sheet to store
-* Create tables for users
-* Setup privelages for the tables.
+* ~~Think through and white paper the initial schema for the DB~~
+* ~~Implement the migration for the proposed final DB schema~~
+* ~~Populate the DB with dummy data~~
+* ~~Create user registration~~
+* ~~Create user login with authentication~~
+* ~~Figure out how to set a session with the user.  Possibly using SQL for persistence~~
+* ~~Setup fetch to the DnD API using Node.js~~
+* ~~Create the character creation form using DnD API contents. This will be a dumb page, does not have logic for rules of the game.~~
+* ~~Get the character sheet to store~~
+* ~~Create tables for users~~
+* ~~Setup privelages for the tables.~~
+* Mark the games that player has a character in
 * Work on the styling of everything

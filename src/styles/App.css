@@ -1,3 +1,7 @@
 .adminStyling{
   border: solid black 2px;
 }
+
+.playerStyling{
+  border: solid red 2px;
+}

@@ -65,7 +65,7 @@ class Dashboard extends Component {
       return <Redirect to='/' />
     }
 
-    console.log(this.state);
+
     return (
       <div>
         <nav>
@@ -79,6 +79,13 @@ class Dashboard extends Component {
           <ul>
             {this.state.gameArray.map((game) => {
               let thisClass = ""
+              let numPlayers = game.Characters.length
+              game.Characters.map((char) => {
+                if(char.UserId === this.state.userId){
+                  thisClass = 'playerStyling'
+                }
+              })
+
               if (game.adminUserId === this.state.userId){
                 thisClass = "adminStyling"
               }
@@ -86,7 +93,7 @@ class Dashboard extends Component {
 
                 <li key={game.id}>
                   <Link className={thisClass} to={`/dashboard/game/${game.id}`}>
-                  {game.title}
+                  {game.title} - {numPlayers} player(s)
                   </Link>
                 </li>
 

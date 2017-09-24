@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import localStorage from 'local-storage'
+import SpellComp from './SpellComp'
+import {Redirect} from 'react-router-dom'
 
 // put pure calculations here that don't need state / props
 
@@ -59,6 +61,7 @@ class GameCharDetails extends Component {
       raceId: 0,
       subRace: "",
       subClass: "",
+      success: false,
       race: {
         size: "",
         speed: 0,
@@ -150,8 +153,7 @@ class GameCharDetails extends Component {
     })
 
   }
-// this.fetchCharAPI(this.state.classId, this.state.raceId)
-  //Create a submit function that will patch to /api/char/update and submits all the stats along with current HP and level.
+
   handleSubmit(e){
     e.preventDefault()
     console.log('button working');
@@ -159,7 +161,25 @@ class GameCharDetails extends Component {
       method: "PATCH",
       body: JSON.stringify({
         currentHP: this.state.currentHP,
-        charId: this.state.id
+        charId: this.state.id,
+        str: this.state.str,
+        dex: this.state.dex,
+        con: this.state.con,
+        int: this.state.int,
+        wis: this.state.wis,
+        cha: this.state.cha,
+        level: this.state.level,
+        spellList: this.state.spellList,
+        one: this.state.one,
+        two: this.state.two,
+        three: this.state.three,
+        four: this.state.four,
+        five: this.state.five,
+        six: this.state.six,
+        seven: this.state.seven,
+        eight: this.state.eight,
+        nine: this.state.nine,
+
       }),
       headers: {
         'token': this.state.token,
@@ -169,6 +189,9 @@ class GameCharDetails extends Component {
     .then(r => r.json())
     .then(json => {
       console.log('the response', json);
+      this.setState({
+        success: json.success
+      })
     })
   }
 
@@ -202,7 +225,6 @@ class GameCharDetails extends Component {
   }
 
   render() {
-    console.log(this.state);
     let char = this.state
     let hp = calcHP(char.hitDie, char.level, calcMod(char.con))
     let spellcastingDiv = <div></div>
@@ -274,9 +296,11 @@ class GameCharDetails extends Component {
         </fieldset>
       )
     }
+    if(this.state.success){
+      return <Redirect to='/dashboard' />
+    }
     return (
       <div>
-
           <h4>details on the character</h4>
           <p>Character Name: {char.charName}</p>
           <p>You are playing a level {char.level} {char.raceName} {char.className} with the background of {char.background}.  Your background story is: <br /> {char.bio}</p>
@@ -368,7 +392,7 @@ class GameCharDetails extends Component {
           {spellcastingDiv}
 
           <form onSubmit={this.handleSubmit}>
-        <button type="submit">Update Character Sheet</button>
+        <button type="submit">Finished! Submit Updated Sheet</button>
         </form>
 
 
