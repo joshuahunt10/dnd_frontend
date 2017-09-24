@@ -1,0 +1,119 @@
+Bionic Commando Font
+
+Created By:
+	Dean Tersigni (AKA TheAlmightyGuru)
+
+Downloaded From:
+	The Game Font Database
+	(http://www.thealmightyguru.com/GameFonts/)
+
+Instructions:
+	To install this font, copy the Bionic Commando.FON file into your 
+"C:\Windows\Fonts" folder (or equivalent). MS Paint will see the font, but 
+most modern programs don't recognize FON fonts.
+
+
+Description:
+	This font contains all of the letters and symbols used in the NES 
+game Bionic Commando. Below is a list of every character that's supported 
+in the font and which glyph it corresponds to. The symbol to the left of 
+the equal sign is what you type, the symbol to the right is what you get.
+
+
+Symbols
+
+! = !	; Exclamation point
+? = ?	; Question mark
+. = .	; Period
+, = ,	; Comma
+' = '	; Apostrophe
+- = -	; Dash
+* = •	; Middle dot
++ = +	; Plus
+= = =	; Equal
+: = .	; Tiny period used on copyright screen.
+; = .,	; Tiny period and comma used on copyright screen.
+@ = ©	; Copyright
+e = ^	; Bullet graphic
+/ = /	; Forward slash. Never used in the game, but part of the ROM.
+& = @	; This swirling glyph is never used, but part of the ROM.
+
+
+Greek Letters - Communicators
+
+a = d	; Alpha
+b = B	; Beta
+c = r	; Gamma
+d = s	; Delta
+
+
+Borders - Used in the inventory screens
+
+[ = Top-left border
+] = Top-right border
+{ = Bottom-left border
+} = Bottom-right border
+_ = Horizontal border
+| = Vertical border
+
+
+Numbers - Used in most game dialog
+
+0 = 0
+1 = 1	
+2 = 2
+3 = 3
+4 = 4
+5 = 5
+6 = 6
+7 = 7
+8 = 8
+9 = 9
+
+
+Capital Letters - Used in most game dialog
+
+A = A
+B = B
+C = C
+D = D
+E = E
+F = F
+G = G
+H = H
+I = I
+J = J
+K = K
+L = L
+M = M
+N = N
+O = O
+P = P
+Q = Q
+R = R
+S = S
+T = T
+U = U
+V = V
+W = W
+X = X
+Y = Y
+Z = Z
+
+
+Special Letters and Numbers - Most of the letters and numbers used in various 
+	screens are the same, but these are the ones that differ from the 
+	standard game dialog.
+
+f = F	; F
+g = G	; G
+h = H	; H
+i = 2	; 2
+j = 3	; 3
+k = 4	; 4
+l = 5	; 5
+m = 6	; 6
+n = 7	; 7
+o = O	; O (letter)
+r = R	; R
+s = S	; S

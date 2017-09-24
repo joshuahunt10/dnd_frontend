@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import localStorage from 'local-storage'
-import SpellComp from './SpellComp'
+// import SpellComp from './SpellComp'
 import {Redirect} from 'react-router-dom'
 
 // put pure calculations here that don't need state / props

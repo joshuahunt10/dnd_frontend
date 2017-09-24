@@ -3,10 +3,6 @@ import {Modal, Button} from 'react-bootstrap'
 import {Redirect} from 'react-router-dom'
 import localStorage from "local-storage"
 
-function calcSpellSave(stat){
-
-}
-
 class ClassDetails extends Component {
   constructor(props) {
     super(props);

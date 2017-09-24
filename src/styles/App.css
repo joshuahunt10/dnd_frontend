@@ -1,3 +1,17 @@
+@font-face {
+    font-family: myFirstFont;
+    src: url(./fonts/PressStart2P.ttf);
+}
+
+.navbar {
+    font-family: myFirstFont;
+}
+
+.navbar-fire {
+  width: 2%;
+  margin-right: 3%;
+}
+
 .adminStyling{
   border: solid black 2px;
 }

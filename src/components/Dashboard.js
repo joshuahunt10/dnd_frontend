@@ -69,7 +69,6 @@ class Dashboard extends Component {
     return (
       <div>
         <nav>
-          <Link to='/dashboard/charcreate'>Create a Character</Link> ||
           <Link to='/dashboard/tables'> Create a Game!</Link>
         </nav>
         <button onClick={this.logout}>Log Out</button>
