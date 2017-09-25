@@ -60,9 +60,15 @@ class GameConfig extends Component {
 
 
   render() {
-    // console.log(this.state.game.Characters);
     let userChar = <span />
-    // console.log(this.state.game.Characters.length);
+    let charList = (
+      this.state.game.Characters.map((c, index)=>{
+        return(
+          <li key={index}>{c.charName}</li>
+        )
+      })
+    )
+
 
     if(this.state.game.Characters.length === 0 && this.state.game.adminUserId !== this.state.userId){
       userChar = (
@@ -80,6 +86,13 @@ class GameConfig extends Component {
     }
     else if(this.state.game.adminUserId === this.state.userId){
       userChar = <span />
+      charList = (
+        this.state.game.Characters.map((char, index)=>{
+          return(
+            <li key={index}> <Link to={`/dashboard/game/${this.state.game.id}/${char.id}`}> {char.charName}</Link></li>
+          )
+        })
+      )
     }else(
       this.state.game.Characters.map((char) =>{
         if(char.UserId === this.state.userId){
@@ -100,23 +113,7 @@ class GameConfig extends Component {
         )
       })
     )
-
-    // let message = <span/>
-    // if(this.state.game.adminUserId === this.state.userId){
-    //   message = (
-    //     <div className="adminViewCharList">
-    //       <h4>The characters in this game are:</h4>
-    //       <ul>
-    //         {this.state.game.Characters.map((c, index)=>{
-    //           return(
-    //             <li key={index}>{c.charName}</li>
-    //           )
-    //         })}
-    //       </ul>
-    //     </div>
-    //   )
-    // }
-
+    
     return (
       <div>
         <h1>Game Information</h1>
@@ -125,11 +122,7 @@ class GameConfig extends Component {
           <div className="adminViewCharList">
             <h4>The characters in this game are:</h4>
             <ul>
-              {this.state.game.Characters.map((c, index)=>{
-                return(
-                  <li key={index}>{c.charName}</li>
-                )
-              })}
+              {charList}
             </ul>
           </div>
         </div>
