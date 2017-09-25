@@ -8,6 +8,7 @@ class GameTables extends Component {
     this.state = {
       token:"",
       gameTitle: "",
+      gameDesc: "",
       gameCreated: false
 
     }
@@ -25,7 +26,8 @@ class GameTables extends Component {
     fetch('http://localhost:4000/api/games/create', {
       method: "POST",
       body: JSON.stringify({
-        title: this.state.gameTitle
+        title: this.state.gameTitle,
+        description: this.state.gameDesc
       }),
       headers: {
         'token': this.state.token,
@@ -52,6 +54,7 @@ class GameTables extends Component {
           <h4>Tables!</h4>
           <form onSubmit={this.handleCreateGame}>
             <input type="text" placeholder="Game Name" onChange={e => this.setState({gameTitle: e.target.value})} value={this.state.gameTitle}/>
+            <textarea placeholder="About this game" onChange={e => this.setState({gameDesc: e.target.value})} value={this.state.gameDesc} />
             <button type="submit">Create a game</button>
           </form>
 

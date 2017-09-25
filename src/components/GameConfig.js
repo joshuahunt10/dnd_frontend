@@ -10,6 +10,7 @@ class GameConfig extends Component {
       token: localStorage.get("JWT"),
       game: {
         Characters: [],
+        description: "",
         adminUserId: ""
       },
       userId: ""
@@ -113,11 +114,12 @@ class GameConfig extends Component {
         )
       })
     )
-    
+
     return (
       <div>
         <h1>Game Information</h1>
         <h3>{this.state.game.title}</h3>
+        <p>{this.state.game.description}</p>
         <div className="adminViewCharListWrapper">
           <div className="adminViewCharList">
             <h4>The characters in this game are:</h4>
