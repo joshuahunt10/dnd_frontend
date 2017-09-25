@@ -72,10 +72,10 @@ class Dashboard extends Component {
           <Link to='/dashboard/tables'> Create a Game!</Link>
         </nav>
         <button onClick={this.logout}>Log Out</button>
-        <div>
-          <h2>This is the user Dashboard</h2>
-          <h4>Game List</h4>
-          <ul>
+        <h2>This is the user Dashboard</h2>
+        <h4>Game List</h4>
+        <div className = "game-wrapper">
+
             {this.state.gameArray.map((game) => {
               let thisClass = ""
               let numPlayers = game.Characters.length
@@ -90,15 +90,19 @@ class Dashboard extends Component {
               }
               return (
 
-                <li key={game.id}>
-                  <Link className={thisClass} to={`/dashboard/game/${game.id}`}>
+                <div className="gameName-container" key={game.id}>
+                  <div className='dnd-logo-wrapper' id={thisClass}>
+                    <img className='dnd-logo' src="http://www.enworld.org/forum/attachment.php?s=d02d85744644ba734eec5e6c5b07bd22&attachmentid=62059&d=1402069840&stc=1" alt=''/>
+
+                  </div>
+                  <Link id="linkToGame" to={`/dashboard/game/${game.id}`}>
                   {game.title} - {numPlayers} player(s)
                   </Link>
-                </li>
+                </div>
 
               )
             })}
-          </ul>
+
         </div>
 
       </div>
