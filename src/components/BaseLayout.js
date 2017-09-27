@@ -38,6 +38,7 @@ class BaseLayout extends Component {
         <div className='base-layout-wrapper'>
           {this.props.children}
         </div>
+
       </div>
     );
   }

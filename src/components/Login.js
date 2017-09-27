@@ -56,14 +56,14 @@ class Login extends Component {
       return <Redirect to="/dashboard" />
     }
     return (
-      <div>
-        <h3>This is the Login page</h3>
-        <form onSubmit={this.handleSubmit}>
+      <div className='login-wrapper'>
+        <form className='login-form' onSubmit={this.handleSubmit}>
+          <h3>Login:</h3>
           <label htmlFor='email'>Email:</label>
-          <input type='email' placeholder="Email" onChange={this.handleEmailInput} value={this.state.email}/>
+          <input type='email' className="form-control" placeholder="Email" aria-describedby="emailHelp" onChange={this.handleEmailInput} value={this.state.email}/>
           <label htmlFor='password'>Password:</label>
-          <input type='password' placeholder="Password" onChange={this.handlePasswordInput} value={this.state.password}/>
-          <button type="submit">Login</button>
+          <input type='password' className="form-control" placeholder="Password" onChange={this.handlePasswordInput} value={this.state.password}/>
+          <button className="btn btn-success" id='login-butt' type="submit">Login</button>
         </form>
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Redirect, Link} from 'react-router-dom'
 import localStorage from 'local-storage'
+import gmIcon from "../styles/images/gm-icon.png"
 
 class Dashboard extends Component {
   constructor(props) {
@@ -64,40 +65,73 @@ class Dashboard extends Component {
     if(this.state.signout){
       return <Redirect to='/' />
     }
-
+    let gameHTML = "";
 
     return (
-      <div>
-        <nav>
-          <Link to='/dashboard/tables'> Create a Game!</Link>
+      <div id="dashboard">
+        <nav className='dash-nav'>
+          <Link to='/dashboard/tables'>
+          <button type="button" className="btn btn-success">Create a Game!</button>
+           </Link>
+          <button className="btn btn-secondary" onClick={this.logout}>Log Out</button>
         </nav>
-        <button onClick={this.logout}>Log Out</button>
-        <h2>This is the user Dashboard</h2>
-        <h4>Game List</h4>
+        <div className="dash-head-wrapper">
+          <h3 className="dash-head">Games on Tabletop Storehouse: </h3>
+          <div className='game-legend'>
+            <ul className="game-legend-list">
+              <li>
+                <img className='legend-logo' src="http://www.enworld.org/forum/attachment.php?s=d02d85744644ba734eec5e6c5b07bd22&attachmentid=62059&d=1402069840&stc=1" alt=''/>
+                <span>The game has no players</span>
+              </li>
+              <li>
+                <img className='legend-logo' src="http://www.watchtowerrestaurant.com/wp-content/uploads/2016/11/cropped-Dice-d20-Opaque2_black.png" alt=''/>
+                <span>You have a character in the game</span>
+              </li>
+              <li>
+                <img className = 'legend-logo'
+                  src={gmIcon}
+                    alt='' />
+                    <span>You are the GM of the game</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         <div className = "game-wrapper">
 
             {this.state.gameArray.map((game) => {
-              let thisClass = ""
+              let statusStyling = ""
               let numPlayers = game.Characters.length
+              if (game.adminUserId === this.state.userId){
+                statusStyling = "adminStyling"
+                gameHTML = (
+                  <img className = 'dnd-logo'
+                    src={gmIcon}
+                      alt='' />
+                )
+              }
+              else {
+                statusStyling = 'noPlayerStyling'
+                gameHTML = (
+                  <img className='dnd-logo' src="http://www.enworld.org/forum/attachment.php?s=d02d85744644ba734eec5e6c5b07bd22&attachmentid=62059&d=1402069840&stc=1" alt=''/>
+                )
+              }
               game.Characters.map((char) => {
                 if(char.UserId === this.state.userId){
-                  thisClass = 'playerStyling'
+                  statusStyling = 'playerStyling'
+                  gameHTML = (
+                    <img className='dnd-logo' src="http://www.watchtowerrestaurant.com/wp-content/uploads/2016/11/cropped-Dice-d20-Opaque2_black.png" alt=''/>
+                  )
+
                 }
               })
 
-              if (game.adminUserId === this.state.userId){
-                thisClass = "adminStyling"
-              }
               return (
 
                 <div className="gameName-container" key={game.id}>
-                  <div className='dnd-logo-wrapper' id={thisClass}>
-                    <img className='dnd-logo' src="http://www.enworld.org/forum/attachment.php?s=d02d85744644ba734eec5e6c5b07bd22&attachmentid=62059&d=1402069840&stc=1" alt=''/>
-
-                  </div>
-                  <Link id="linkToGame" to={`/dashboard/game/${game.id}`}>
-                  {game.title} - {numPlayers} player(s)
-                  </Link>
+                    <Link id="linkToGame" to={`/dashboard/game/${game.id}`}>
+                    {game.title} - {numPlayers} player(s)
+                    {gameHTML}
+                    </Link>
                 </div>
 
               )

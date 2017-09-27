@@ -448,8 +448,14 @@ class ClassDetails extends Component {
           {this.state.class.subclasses.map((sc, index) => {
             return(
               <div key={index} >
-                <input type="radio" value={sc.name} onChange={this.handleSubClassCheckBox}/>
-                <label id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</label>
+                <input type="radio" value={sc.name} name='subclass' onChange={this.handleSubClassCheckBox}
+                />
+                <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
+
+                <input type='radio' value='other' name='subclass' id='radio-other'
+                />
+
+                <span>Other: <input id='other-input' type='text' disabled={false} /> </span>
               </div>
             )
           })}
