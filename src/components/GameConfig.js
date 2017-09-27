@@ -13,7 +13,8 @@ class GameConfig extends Component {
         description: "",
         adminUserId: ""
       },
-      userId: ""
+      userId: "",
+      userName: ""
     }
     this.fetchGames = this.fetchGames.bind(this);
     this.fetchUser = this.fetchUser.bind(this);
@@ -35,7 +36,8 @@ class GameConfig extends Component {
     .then(r => r.json())
     .then(json => {
       this.setState({
-        userId: json.id
+        userId: json.id,
+        userName: json.name
       })
     })
   }
@@ -74,8 +76,8 @@ class GameConfig extends Component {
     if(this.state.game.Characters.length === 0 && this.state.game.adminUserId !== this.state.userId){
       userChar = (
         <div>
-          <h2>There are no characters in this game.</h2>
-          <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Character</Link>
+          <h2>There are not any heroes in this world... yet!</h2>
+          <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Heroe</Link>
         </div>
       )
     } else if(this.state.game.Characters.length === 0 && this.state.game.adminUserId === this.state.userId){
@@ -99,8 +101,8 @@ class GameConfig extends Component {
         if(char.UserId === this.state.userId){
           userChar = (
             <div className="playerViewChar">
-              <h3>Your character in this game:
-                <Link to={`/dashboard/game/${this.state.game.id}/${char.id}`}> {char.charName}</Link>
+              <h3>Your Heroe:
+                <Link className='charLink' to={`/dashboard/game/${this.state.game.id}/${char.id}`}> {char.charName}</Link>
               </h3>
             </div>
           )
@@ -108,29 +110,33 @@ class GameConfig extends Component {
         }
         return userChar = (
           <div>
-            <h2>You don't have any characters in this game</h2>
-            <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Character</Link>
+            <h2>You don't have any characters in this game.</h2>
+            <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Heroe to Join!</Link>
           </div>
         )
       })
     )
 
     return (
-      <div>
-        <h1>{this.state.game.title}</h1>
-        <p>About this game: {this.state.game.description}</p>
+      <div className='container game-config-container'>
+        <div className='game-config-head'>
+          <h1>{this.state.game.title}</h1>
+          <h4>The Master of this World: {this.state.userName}</h4>
+          <hr />
+          <label>About this game:</label> <p>{this.state.game.description}</p>
+        </div>
+        <div className="playerViewCharWrapper">
+          {userChar}
+        </div>
         <div className="adminViewCharListWrapper">
           <div className="adminViewCharList">
-            <h4>The characters in this game are:</h4>
+            <h4>The heroes of this world are:</h4>
             <ul>
               {charList}
             </ul>
           </div>
         </div>
 
-        <div className="playerViewCharWrapper">
-          {userChar}
-        </div>
       </div>
     );
   }

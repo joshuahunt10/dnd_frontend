@@ -7,6 +7,8 @@ class ClassDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      textBoxDisable: true,
+      subRaceDisable: true,
       token: "",
       str: "",
       dex: "",
@@ -364,12 +366,9 @@ class ClassDetails extends Component {
         </fieldset>
       )
     }
-
     return (
       <div>
-        <h2>This is the class Details page</h2>
-
-
+        <h2>Create a Hero: Step 2 of 2</h2>
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
         <label>Character Name:</label>
         <input type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
@@ -396,7 +395,6 @@ class ClassDetails extends Component {
           <option value="Neutral Evil">Neutral Evil</option>
           <option value="Chaotic Evil">Chaotic Evil</option>
         </select>
-
         <p>Your hit die is a d{this.state.class.hit_die}</p>
         <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
         <h4>Armor and Weapon Profeciencies</h4>
@@ -453,9 +451,11 @@ class ClassDetails extends Component {
                 <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
 
                 <input type='radio' value='other' name='subclass' id='radio-other'
+                  onChange={e => this.setState({textBoxDisable: false})}
                 />
-
-                <span>Other: <input id='other-input' type='text' disabled={false} /> </span>
+                <span>Other: <input id='other-input' type='text' disabled={this.state.textBoxDisable}
+                  onChange={e => this.setState({subClass: e.target.value})}
+                 /></span>
               </div>
             )
           })}
@@ -463,8 +463,13 @@ class ClassDetails extends Component {
           {this.state.race.subraces.map((sr, index) => {
             return(
               <div key={index}>
-                <input type="radio" value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
+                <input type="radio"  name='subRace' value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
                 <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
+              <br />
+              <input type='radio' value='other' name='subRace' id='radio-other'
+                onChange={e => this.setState({subRaceDisable: false})} />
+              <span>Other: <input id='other-input' type='text' disabled={this.state.subRaceDisable}
+                onChange={e => this.setState({subRace: e.target.value})}/></span>
               </div>
             )
           })}
@@ -546,7 +551,6 @@ class ClassDetails extends Component {
       </div>
     );
   }
-
 }
 
 export default ClassDetails;

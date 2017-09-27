@@ -47,34 +47,51 @@ class CharCreate extends Component {
     }
 
     return (
-      <div>
-        <h2>This is the form to create a character</h2>
+      <div className='container game-config-container'>
+        <h2>Create Your Heroe: Step 1 of 2</h2>
         <form onSubmit={this.handleSubmit}>
-          <select onChange={e => this.setState({classID: e.target.value})}>
-            <option value=""></option>
-            {this.state.classes.map((ppl, index) => {
-              return(
-                  <option key={index} value={ppl.url.substring(ppl.url.lastIndexOf('/') + 1)}>{ppl.name}</option>
-              )
-            })}
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <label>Select a Class: </label>
+                </td>
+                <td>
+                  <select onChange={e => this.setState({classID: e.target.value})}>
+                    <option value=""></option>
+                    {this.state.classes.map((ppl, index) => {
+                      return(
+                          <option key={index} value={ppl.url.substring(ppl.url.lastIndexOf('/') + 1)}>{ppl.name}</option>
+                      )
+                    })}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Select a Race: </label>
 
-          </select>
-          <select onChange={e => this.setState({raceID: e.target.value})}>
-            <option value=""></option>
-            {this.state.races.map((races, index) => {
-              return(
-                <option key={index} value={races.url.substring(races.url.lastIndexOf('/') +1)}>{races.name}</option>
-              )
-            })}
-          </select>
-          <button type="submit">Select Class</button>
+                </td>
+                <td>
+                  <select onChange={e => this.setState({raceID: e.target.value})}>
+                    <option value=""></option>
+                    {this.state.races.map((races, index) => {
+                      return(
+                        <option key={index} value={races.url.substring(races.url.lastIndexOf('/') +1)}>{races.name}</option>
+                      )
+                    })}
+                  </select>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button className="btn btn-success char-butt-one" type="submit">On to Step 2</button>
         </form>
 
       </div>
     );
   }
-
 }
-
-
 export default CharCreate;
