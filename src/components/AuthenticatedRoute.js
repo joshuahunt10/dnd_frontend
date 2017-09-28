@@ -2,11 +2,19 @@ import React from "react"
 import { Redirect, Route } from "react-router-dom"
 import localStorage from "local-storage"
 
+const retrieveFromLocalStorage = (key="JWT") => {
+  try{
+    return localStorage.get(key)
+  } catch(exception){
+    return false
+  }
+}
+
 const AuthenticatedRoute = ({ component: Component, render, ...rest }) =>
   <Route
     {...rest}
     render={props => {
-      if (localStorage.get("JWT")) {
+      if (retrieveFromLocalStorage()) {
         if (render) {
           return render()
         } else {

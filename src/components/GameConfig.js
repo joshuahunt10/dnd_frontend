@@ -77,7 +77,7 @@ class GameConfig extends Component {
       userChar = (
         <div>
           <h2>There are not any heroes in this world... yet!</h2>
-          <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Heroe</Link>
+          <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a hero</Link>
         </div>
       )
     } else if(this.state.game.Characters.length === 0 && this.state.game.adminUserId === this.state.userId){
@@ -101,7 +101,7 @@ class GameConfig extends Component {
         if(char.UserId === this.state.userId){
           userChar = (
             <div className="playerViewChar">
-              <h3>Your Heroe:
+              <h3>Your Hero:
                 <Link className='charLink' to={`/dashboard/game/${this.state.game.id}/${char.id}`}> {char.charName}</Link>
               </h3>
             </div>
