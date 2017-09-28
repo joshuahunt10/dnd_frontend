@@ -48,17 +48,23 @@ class GameTables extends Component {
       return <Redirect to='/dashboard' />
     }
     return (
-      <div>
-        <h2>This page will display the game tables.</h2>
-        <div>
-          <h4>Tables!</h4>
-          <form onSubmit={this.handleCreateGame}>
-            <input type="text" placeholder="Game Name" onChange={e => this.setState({gameTitle: e.target.value})} value={this.state.gameTitle}/>
-            <textarea placeholder="About this game" onChange={e => this.setState({gameDesc: e.target.value})} value={this.state.gameDesc} />
-            <button type="submit">Create a game</button>
+      <div className='container game-create-container'>
+        <h2>Create a Game</h2>
+
+          <form className="createGameForm" onSubmit={this.handleCreateGame}>
+            <div>
+              <label htmlFor="gameName">Game Name: </label>
+              <input type="text" placeholder="Game Name" onChange={e => this.setState({gameTitle: e.target.value})} value={this.state.gameTitle}/>
+            </div>
+
+            <div>
+              <label htmlFor="gameDesc" >Description:</label>
+              <textarea placeholder="About this game" onChange={e => this.setState({gameDesc: e.target.value})} value={this.state.gameDesc}  />
+              <br />
+              <button type="submit">Create a game</button>
+            </div>
           </form>
 
-        </div>
       </div>
     );
   }
