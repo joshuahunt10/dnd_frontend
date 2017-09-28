@@ -101,7 +101,7 @@ class GameCharDetails extends Component {
 
 
   fetchOneChar(){
-    fetch(`http://localhost:4000/api/user/onechar`,{
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/user/onechar`,{
       method: "POST",
       body: JSON.stringify({
         charId: this.props.match.params.charId
@@ -157,7 +157,7 @@ class GameCharDetails extends Component {
   handleSubmit(e){
     e.preventDefault()
     console.log('button working');
-    fetch('http://localhost:4000/api/char/update', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/char/update`,{
       method: "PATCH",
       body: JSON.stringify({
         currentHP: this.state.currentHP,

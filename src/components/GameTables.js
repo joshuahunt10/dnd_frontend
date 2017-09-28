@@ -23,7 +23,7 @@ class GameTables extends Component {
 
   handleCreateGame(e){
     e.preventDefault()
-    fetch('http://localhost:4000/api/games/create', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/games/create`,{
       method: "POST",
       body: JSON.stringify({
         title: this.state.gameTitle,

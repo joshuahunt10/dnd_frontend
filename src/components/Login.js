@@ -16,6 +16,8 @@ class Login extends Component {
     this.handlePasswordInput = this.handlePasswordInput.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
 
+  console.log({env: process.env})
+
   }
 
   handleEmailInput(e){
@@ -34,7 +36,7 @@ class Login extends Component {
     this.setState({message: ""})
     e.preventDefault()
     console.log(this.state)
-    fetch('http://localhost:4000/api/authenticate', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/authenticate`,{
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,

@@ -53,7 +53,7 @@ class Register extends Component {
   handleSubmit(e){
     e.preventDefault()
     console.log(this.state);
-    fetch('http://localhost:4000/api/register', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/register`,{
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,

@@ -213,7 +213,7 @@ class ClassDetails extends Component {
 
   handleSubmit(e){
     e.preventDefault()
-    fetch('http://localhost:4000/api/user/char/create', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/user/char/create`, {
       method: "POST",
       body: JSON.stringify({
         charName: this.state.charName,

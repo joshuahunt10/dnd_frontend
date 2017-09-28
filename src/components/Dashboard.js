@@ -30,7 +30,7 @@ class Dashboard extends Component {
 
   }
   fetchAllGames(){
-    fetch('http://localhost:4000/api/games', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/games`, {
       method: "GET",
       headers: {
         'token': this.state.token,
@@ -46,7 +46,7 @@ class Dashboard extends Component {
   }
 
   fetchUser(){
-    fetch('http://localhost:4000/api/user', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/user`, {
       method: "GET",
       headers: {
         'token': this.state.token,

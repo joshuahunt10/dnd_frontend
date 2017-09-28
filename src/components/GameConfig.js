@@ -26,7 +26,7 @@ class GameConfig extends Component {
   }
 
   fetchUser(){
-    fetch('http://localhost:4000/api/user', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/user`,{
       method: "GET",
       headers: {
         'token': this.state.token,
@@ -43,7 +43,7 @@ class GameConfig extends Component {
   }
 
   fetchGames(){
-    fetch('http://localhost:4000/api/games/details', {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/games/details`,{
       method: "POST",
       body: JSON.stringify({
         id: this.props.match.params.gameId
