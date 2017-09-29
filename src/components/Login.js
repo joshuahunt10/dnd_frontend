@@ -15,9 +15,6 @@ class Login extends Component {
     this.handleEmailInput = this.handleEmailInput.bind(this)
     this.handlePasswordInput = this.handlePasswordInput.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-
-  console.log({env: process.env})
-
   }
 
   handleEmailInput(e){
@@ -58,22 +55,27 @@ class Login extends Component {
 
     })
   }
-
   render() {
     if(this.state.redirect){
       return <Redirect to="/dashboard" />
+    }
+    let errorStyling = ''
+    let errorDiv= ''
+    if(this.state.message){
+      errorStyling = 'errorStyling'
+      errorDiv = (
+        <div className="loginError">{this.state.message}</div>
+      )
     }
     return (
       <div className='login-wrapper'>
         <form className='login-form' onSubmit={this.handleSubmit}>
           <h3>Login:</h3>
-          {this.state.message &&
-            <div className="error">{this.state.message}</div>
-          }
+          {errorDiv}
           <label htmlFor='email'>Email:</label>
-          <input type='email' className="form-control" placeholder="Email" aria-describedby="emailHelp" onChange={this.handleEmailInput} value={this.state.email}/>
+          <input type='email' className={'form-control ' + errorStyling} placeholder="Email" aria-describedby="emailHelp" onChange={this.handleEmailInput} value={this.state.email}/>
           <label htmlFor='password'>Password:</label>
-          <input type='password' className="form-control" placeholder="Password" onChange={this.handlePasswordInput} value={this.state.password}/>
+          <input type='password' className={'form-control ' + errorStyling} placeholder="Password" onChange={this.handlePasswordInput} value={this.state.password}/>
           <button className="btn btn-success" id='login-butt' type="submit">Login</button>
         </form>
       </div>

@@ -367,34 +367,47 @@ class ClassDetails extends Component {
       )
     }
     return (
-      <div>
+      <div className='container'>
         <h2>Create a Hero: Step 2 of 2</h2>
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
-        <label>Character Name:</label>
-        <input type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
+        <div className='char-field'>
+          <div className="form-group col-12">
+            <label>Character Name:</label>
+            <input className="form-control" type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
+          </div>
+          <div className="form-group col-12">
+            <label>Level:</label>
+            <input className="form-control" type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>
+          </div>
+          <div className="form-group col-12">
+            <label>Background:</label>
+            <input className="form-control" type="text" onChange={e => this.setState({background: e.target.value})} value={this.state.background}/>
+          </div>
+          <div className="form-group col-12">
+            <label>Size:</label>
+            <input className="form-control" type="text" value={this.state.race.size}/>
+          </div>
+          <div className="form-group col-12">
+            <label>Speed:</label>
+            <input className="form-control" type="text" value={this.state.race.speed}/>
+          </div>
+          <div className="form-group col-12">
+            <label>Alignment:</label>
+            <select className="form-control" onChange={e => this.setState({alignment: e.target.value})} >
+              <option value=""></option>
+              <option value="Lawful Good">Lawful Good</option>
+              <option value="Neutral Good">Neutral Good</option>
+              <option value="Chaotic Good">Chaotic Good</option>
+              <option value="Lawful Neutral">Lawful Neutral</option>
+              <option value="Neutral">Neutral</option>
+              <option value="Chaotic Neutral">Chaotic Neutral</option>
+              <option value="Lawful Evil">Lawful Evil</option>
+              <option value="Neutral Evil">Neutral Evil</option>
+              <option value="Chaotic Evil">Chaotic Evil</option>
+            </select>
+          </div>
 
-        <label>Level:</label>
-        <input type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>
-
-        <label>Background:</label>
-        <input type="text" onChange={e => this.setState({background: e.target.value})} value={this.state.background}/>
-        <label>Size:</label>
-        <input type="text" value={this.state.race.size}/>
-        <label>Speed:</label>
-        <input type="text" value={this.state.race.speed}/>
-        <label>Alignment:</label>
-        <select onChange={e => this.setState({alignment: e.target.value})} >
-          <option value=""></option>
-          <option value="Lawful Good">Lawful Good</option>
-          <option value="Neutral Good">Neutral Good</option>
-          <option value="Chaotic Good">Chaotic Good</option>
-          <option value="Lawful Neutral">Lawful Neutral</option>
-          <option value="Neutral">Neutral</option>
-          <option value="Chaotic Neutral">Chaotic Neutral</option>
-          <option value="Lawful Evil">Lawful Evil</option>
-          <option value="Neutral Evil">Neutral Evil</option>
-          <option value="Chaotic Evil">Chaotic Evil</option>
-        </select>
+        </div>
         <p>Your hit die is a d{this.state.class.hit_die}</p>
         <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
         <h4>Armor and Weapon Profeciencies</h4>

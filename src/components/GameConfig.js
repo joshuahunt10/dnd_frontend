@@ -111,7 +111,7 @@ class GameConfig extends Component {
         return userChar = (
           <div>
             <h2>You don't have any characters in this game.</h2>
-            <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Heroe to Join!</Link>
+            <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Hero to Join!</Link>
           </div>
         )
       })

@@ -217,3 +217,18 @@ a {
 .createGameForm label{
  vertical-align: top;
 }
+
+.loginError{
+  color: red;
+}
+
+.errorStyling{
+  border-color: red;
+  border-style: outset;
+}
+
+.char-field{
+  color: black;
+  background-color: white;
+  border-radius: 8px;
+}

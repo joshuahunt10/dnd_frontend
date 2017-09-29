@@ -48,7 +48,7 @@ class CharCreate extends Component {
 
     return (
       <div className='container game-config-container'>
-        <h2>Create Your Heroe: Step 1 of 2</h2>
+        <h2>Create Your Hero: Step 1 of 2</h2>
         <form onSubmit={this.handleSubmit}>
           <table>
             <tbody>
