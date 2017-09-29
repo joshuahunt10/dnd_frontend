@@ -408,85 +408,90 @@ class ClassDetails extends Component {
           </div>
 
         </div>
-        <p>Your hit die is a d{this.state.class.hit_die}</p>
-        <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
-        <h4>Armor and Weapon Profeciencies</h4>
-        <ul>
-          {this.state.class.proficiencies.map((prof, index) => {
-            return(
-              <div key={index}>
-                <li>{prof.name}</li>
-              </div>
-            )
-          })}
-        </ul>
-        <h4>Profeciencies from your race</h4>
-        <ul>
-          {this.state.race.starting_proficiencies.map((prof, index) =>{
-            return(
-              <div key={index}><li>{prof.name}</li></div>
-            )
-          })}
-        </ul>
-        <h4>Additional traits from your race</h4>
-        <ul>
-          {this.state.race.traits.map((traits, index) => {
-            return(
-              <div key={index}>
-                <li id={traits.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{traits.name}
-                </li>
-              </div>
-            )
-          })}
-        </ul>
+        <div className="char-field">
+          <p>Your hit die is a d{this.state.class.hit_die}</p>
+          <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
+          <h4>Armor and Weapon Profeciencies</h4>
+          <ul>
+            {this.state.class.proficiencies.map((prof, index) => {
+              return(
+                <div key={index}>
+                  <li>{prof.name}</li>
+                </div>
+              )
+            })}
+          </ul>
+          <h4>Profeciencies from your race</h4>
+          <ul>
+            {this.state.race.starting_proficiencies.map((prof, index) =>{
+              return(
+                <div key={index}><li>{prof.name}</li></div>
+              )
+            })}
+          </ul>
+          <h4>Additional traits from your race</h4>
+          <ul>
+            {this.state.race.traits.map((traits, index) => {
+              return(
+                <div key={index}>
+                  <li id={traits.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{traits.name}
+                  </li>
+                </div>
+              )
+            })}
+          </ul>
+        </div>
+        <div className="char-field">
+          <fieldset>
+            <legend>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</legend>
+            {this.state.class.proficiency_choices[0].from.map((skill, index) => {
+              return(
+                <div key={index}>
+                  <input type='checkbox' onChange={this.handleProfCheckBox} value={skill.name}/>
+                  <label>{skill.name}</label>
+                </div>
+              )
+            })}
+          </fieldset>
+        </div>
+        <div className="char-field">
+          <fieldset>
+            <legend>
+              Options for subclasses and subraces
+            </legend>
+            <h4>Subclasses: </h4>
+            {this.state.class.subclasses.map((sc, index) => {
+              return(
+                <div key={index} >
+                  <input type="radio" value={sc.name} name='subclass' onChange={this.handleSubClassCheckBox}
+                  />
+                  <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
 
-        <fieldset>
-          <legend>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</legend>
-          {this.state.class.proficiency_choices[0].from.map((skill, index) => {
-            return(
-              <div key={index}>
-                <input type='checkbox' onChange={this.handleProfCheckBox} value={skill.name}/>
-                <label>{skill.name}</label>
-              </div>
-            )
-          })}
-        </fieldset>
-        <fieldset>
-          <legend>
-            Options for subclasses and subraces
-          </legend>
-          <h4>Subclasses: </h4>
-          {this.state.class.subclasses.map((sc, index) => {
-            return(
-              <div key={index} >
-                <input type="radio" value={sc.name} name='subclass' onChange={this.handleSubClassCheckBox}
-                />
-                <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
-
-                <input type='radio' value='other' name='subclass' id='radio-other'
-                  onChange={e => this.setState({textBoxDisable: false})}
-                />
-                <span>Other: <input id='other-input' type='text' disabled={this.state.textBoxDisable}
-                  onChange={e => this.setState({subClass: e.target.value})}
-                 /></span>
-              </div>
-            )
-          })}
-          <h4>Subraces:</h4>
-          {this.state.race.subraces.map((sr, index) => {
-            return(
-              <div key={index}>
-                <input type="radio"  name='subRace' value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
-                <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
-              <br />
-              <input type='radio' value='other' name='subRace' id='radio-other'
-                onChange={e => this.setState({subRaceDisable: false})} />
-              <span>Other: <input id='other-input' type='text' disabled={this.state.subRaceDisable}
-                onChange={e => this.setState({subRace: e.target.value})}/></span>
-              </div>
-            )
-          })}
-        </fieldset>
+                  <input type='radio' value='other' name='subclass' id='radio-other'
+                    onChange={e => this.setState({textBoxDisable: false})}
+                  />
+                  <span>Other: <input id='other-input' type='text' disabled={this.state.textBoxDisable}
+                    onChange={e => this.setState({subClass: e.target.value})}
+                  /></span>
+                </div>
+              )
+            })}
+            <h4>Subraces:</h4>
+            {this.state.race.subraces.map((sr, index) => {
+              return(
+                <div key={index}>
+                  <input type="radio"  name='subRace' value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
+                  <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
+                  <br />
+                  <input type='radio' value='other' name='subRace' id='radio-other'
+                    onChange={e => this.setState({subRaceDisable: false})} />
+                    <span>Other: <input id='other-input' type='text' disabled={this.state.subRaceDisable}
+                      onChange={e => this.setState({subRace: e.target.value})}/></span>
+                    </div>
+                  )
+                })}
+              </fieldset>
+        </div>
           <fieldset>
             <legend>Stats</legend>
             <h4>Saving Throws</h4>
