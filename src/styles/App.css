@@ -231,4 +231,22 @@ a {
   color: black;
   background-color: white;
   border-radius: 8px;
+  margin: 0% 2% 1% 0%;
+  flex-basis: 50%;
+}
+
+.rowField{
+  display: flex;
+}
+.colField{
+  display: flex;
+  flex-direction: column;
+  flex-basis: 50%;
+  border-radius: 8px;
+  margin: 0% 2% 1% 0%;
+}
+
+.char-field textarea{
+  width: 100%;
+  height:auto;
 }

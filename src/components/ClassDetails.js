@@ -370,190 +370,205 @@ class ClassDetails extends Component {
       <div className='container'>
         <h2>Create a Hero: Step 2 of 2</h2>
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
-        <div className='char-field'>
-          <div className="form-group col-12">
-            <label>Character Name:</label>
-            <input className="form-control" type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
+        <div className="rowField">
+          <div className='char-field container'>
+            <div className="form-group col-12">
+              <label>Character Name:</label>
+              <input className="form-control" type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
+            </div>
+            <div className="form-group col-12">
+              <label>Level:</label>
+              <input className="form-control" type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>
+            </div>
+            <div className="form-group col-12">
+              <label>Background:</label>
+              <input className="form-control" type="text" onChange={e => this.setState({background: e.target.value})} value={this.state.background}/>
+            </div>
+            <div className="form-group col-12">
+              <label>Size:</label>
+              <input className="form-control" type="text" value={this.state.race.size}/>
+            </div>
+            <div className="form-group col-12">
+              <label>Speed:</label>
+              <input className="form-control" type="text" value={this.state.race.speed}/>
+            </div>
+            <div className="form-group col-12">
+              <label>Alignment:</label>
+              <select className="form-control" onChange={e => this.setState({alignment: e.target.value})} >
+                <option value=""></option>
+                <option value="Lawful Good">Lawful Good</option>
+                <option value="Neutral Good">Neutral Good</option>
+                <option value="Chaotic Good">Chaotic Good</option>
+                <option value="Lawful Neutral">Lawful Neutral</option>
+                <option value="Neutral">Neutral</option>
+                <option value="Chaotic Neutral">Chaotic Neutral</option>
+                <option value="Lawful Evil">Lawful Evil</option>
+                <option value="Neutral Evil">Neutral Evil</option>
+                <option value="Chaotic Evil">Chaotic Evil</option>
+              </select>
+            </div>
           </div>
-          <div className="form-group col-12">
-            <label>Level:</label>
-            <input className="form-control" type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>
+          <div className="char-field container">
+            <p>Your hit die is a d{this.state.class.hit_die}</p>
+            <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
+            <h4>Armor and Weapon Profeciencies</h4>
+            <ul>
+              {this.state.class.proficiencies.map((prof, index) => {
+                return(
+                  <div key={index}>
+                    <li>{prof.name}</li>
+                  </div>
+                )
+              })}
+            </ul>
+            <h4>Profeciencies from your race</h4>
+            <ul>
+              {this.state.race.starting_proficiencies.map((prof, index) =>{
+                return(
+                  <div key={index}><li>{prof.name}</li></div>
+                )
+              })}
+            </ul>
+            <h4>Additional traits from your race</h4>
+            <ul>
+              {this.state.race.traits.map((traits, index) => {
+                return(
+                  <div key={index}>
+                    <li id={traits.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{traits.name}
+                    </li>
+                  </div>
+                )
+              })}
+            </ul>
           </div>
-          <div className="form-group col-12">
-            <label>Background:</label>
-            <input className="form-control" type="text" onChange={e => this.setState({background: e.target.value})} value={this.state.background}/>
+        </div>
+        <div className="rowField">
+          <div className="char-field container">
+            <fieldset>
+              <legend>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</legend>
+              {this.state.class.proficiency_choices[0].from.map((skill, index) => {
+                return(
+                  <div key={index}>
+                    <input type='checkbox' onChange={this.handleProfCheckBox} value={skill.name}/>
+                    <label>{skill.name}</label>
+                  </div>
+                )
+              })}
+            </fieldset>
           </div>
-          <div className="form-group col-12">
-            <label>Size:</label>
-            <input className="form-control" type="text" value={this.state.race.size}/>
-          </div>
-          <div className="form-group col-12">
-            <label>Speed:</label>
-            <input className="form-control" type="text" value={this.state.race.speed}/>
-          </div>
-          <div className="form-group col-12">
-            <label>Alignment:</label>
-            <select className="form-control" onChange={e => this.setState({alignment: e.target.value})} >
-              <option value=""></option>
-              <option value="Lawful Good">Lawful Good</option>
-              <option value="Neutral Good">Neutral Good</option>
-              <option value="Chaotic Good">Chaotic Good</option>
-              <option value="Lawful Neutral">Lawful Neutral</option>
-              <option value="Neutral">Neutral</option>
-              <option value="Chaotic Neutral">Chaotic Neutral</option>
-              <option value="Lawful Evil">Lawful Evil</option>
-              <option value="Neutral Evil">Neutral Evil</option>
-              <option value="Chaotic Evil">Chaotic Evil</option>
-            </select>
-          </div>
+          <div className="colField">
+            <div className="char-field container">
+              <fieldset>
+                <legend>
+                  Options for subclasses and subraces
+                </legend>
+                <h4>Subclasses: </h4>
+                {this.state.class.subclasses.map((sc, index) => {
+                  return(
+                    <div key={index} >
+                      <input type="radio" value={sc.name} name='subclass' onChange={this.handleSubClassCheckBox}
+                      />
+                      <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
 
-        </div>
-        <div className="char-field">
-          <p>Your hit die is a d{this.state.class.hit_die}</p>
-          <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
-          <h4>Armor and Weapon Profeciencies</h4>
-          <ul>
-            {this.state.class.proficiencies.map((prof, index) => {
-              return(
-                <div key={index}>
-                  <li>{prof.name}</li>
-                </div>
-              )
-            })}
-          </ul>
-          <h4>Profeciencies from your race</h4>
-          <ul>
-            {this.state.race.starting_proficiencies.map((prof, index) =>{
-              return(
-                <div key={index}><li>{prof.name}</li></div>
-              )
-            })}
-          </ul>
-          <h4>Additional traits from your race</h4>
-          <ul>
-            {this.state.race.traits.map((traits, index) => {
-              return(
-                <div key={index}>
-                  <li id={traits.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{traits.name}
-                  </li>
-                </div>
-              )
-            })}
-          </ul>
-        </div>
-        <div className="char-field">
-          <fieldset>
-            <legend>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</legend>
-            {this.state.class.proficiency_choices[0].from.map((skill, index) => {
-              return(
-                <div key={index}>
-                  <input type='checkbox' onChange={this.handleProfCheckBox} value={skill.name}/>
-                  <label>{skill.name}</label>
-                </div>
-              )
-            })}
-          </fieldset>
-        </div>
-        <div className="char-field">
-          <fieldset>
-            <legend>
-              Options for subclasses and subraces
-            </legend>
-            <h4>Subclasses: </h4>
-            {this.state.class.subclasses.map((sc, index) => {
-              return(
-                <div key={index} >
-                  <input type="radio" value={sc.name} name='subclass' onChange={this.handleSubClassCheckBox}
-                  />
-                  <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
-
-                  <input type='radio' value='other' name='subclass' id='radio-other'
-                    onChange={e => this.setState({textBoxDisable: false})}
-                  />
-                  <span>Other: <input id='other-input' type='text' disabled={this.state.textBoxDisable}
-                    onChange={e => this.setState({subClass: e.target.value})}
-                  /></span>
-                </div>
-              )
-            })}
-            <h4>Subraces:</h4>
-            {this.state.race.subraces.map((sr, index) => {
-              return(
-                <div key={index}>
-                  <input type="radio"  name='subRace' value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
-                  <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
-                  <br />
-                  <input type='radio' value='other' name='subRace' id='radio-other'
-                    onChange={e => this.setState({subRaceDisable: false})} />
-                    <span>Other: <input id='other-input' type='text' disabled={this.state.subRaceDisable}
-                      onChange={e => this.setState({subRace: e.target.value})}/></span>
+                      <input type='radio' value='other' name='subclass' id='radio-other'
+                        onChange={e => this.setState({textBoxDisable: false})}
+                      />
+                      <span>Other: <input id='other-input' type='text' disabled={this.state.textBoxDisable}
+                        onChange={e => this.setState({subClass: e.target.value})}
+                      /></span>
                     </div>
                   )
                 })}
+                <h4>Subraces:</h4>
+                {this.state.race.subraces.map((sr, index) => {
+                  return(
+                    <div key={index}>
+                      <input type="radio"  name='subRace' value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
+                      <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
+                      <br />
+                      <input type='radio' value='other' name='subRace' id='radio-other'
+                        onChange={e => this.setState({subRaceDisable: false})} />
+                        <span>Other: <input id='other-input' type='text' disabled={this.state.subRaceDisable}
+                          onChange={e => this.setState({subRace: e.target.value})}/></span>
+                        </div>
+                      )
+                    })}
+                  </fieldset>
+            </div>
+            <div className="char-field container">
+              <fieldset>
+                <legend>Stats</legend>
+                <h4>Saving Throws</h4>
+                {this.state.class.saving_throws.map((stat, index) => {
+                  return(
+                    <span key={index}> {stat.name}</span>
+                  )
+                })}
+                <h4>Base Stats and Mods</h4>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Stat Name</th>
+                      <th>Value</th>
+                      <th>Bonus from Race</th>
+                      <th>Modifier</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td onClick={this.fetchAbilityScoreInfo} id='1' style={{cursor: 'pointer'}}> Strength </td>
+                      <td><input type='text' onChange={e => this.setState({str: e.target.value})} value={this.state.str}/></td>
+                      <td>{this.state.race.ability_bonuses[0]}</td>
+                      <td>{this.calcMod(this.state.str)}</td>
+                    </tr>
+                    <tr>
+                      <td onClick={this.fetchAbilityScoreInfo} id='2' style={{cursor: 'pointer'}}>Dexterity</td>
+                      <td><input type='text' onChange={e => this.setState({dex: e.target.value})} value={this.state.dex} /></td>
+                      <td>{this.state.race.ability_bonuses[1]}</td>
+                      <td>{this.calcMod(this.state.dex)}</td>
+                    </tr>
+                    <tr>
+                      <td onClick={this.fetchAbilityScoreInfo} id='3' style={{cursor: 'pointer'}}>Constitution</td>
+                      <td><input type='text' onChange={this.handleConInput} value={this.state.con} /></td>
+                      <td>{this.state.race.ability_bonuses[2]}</td>
+                      <td>{this.calcMod(this.state.con)}</td>
+                    </tr>
+                    <tr>
+                      <td onClick={this.fetchAbilityScoreInfo} id='4' style={{cursor: 'pointer'}}>Intelligence</td>
+                      <td><input type='text' onChange={e => this.setState({int: e.target.value})} value={this.state.int} /></td>
+                      <td>{this.state.race.ability_bonuses[3]}</td>
+                      <td>{this.calcMod(this.state.int)}</td>
+                    </tr>
+                    <tr>
+                      <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Wisdom</td>
+                      <td><input type='text' onChange={e => this.setState({wis: e.target.value})} value={this.state.wis} /></td>
+                      <td>{this.state.race.ability_bonuses[4]}</td>
+                      <td>{this.calcMod(this.state.wis)}</td>
+                    </tr>
+                    <tr>
+                      <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Charisma</td>
+                      <td><input type='text' onChange={e => this.setState({cha: e.target.value})} value={this.state.cha} /></td>
+                      <td>{this.state.race.ability_bonuses[5]}</td>
+                      <td>{this.calcMod(this.state.cha)}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </fieldset>
+            </div>
+
+          </div>
         </div>
-          <fieldset>
-            <legend>Stats</legend>
-            <h4>Saving Throws</h4>
-            {this.state.class.saving_throws.map((stat, index) => {
-              return(
-                <span key={index}> {stat.name}</span>
-              )
-            })}
-            <table>
-              <thead>
-                <tr>
-                  <th>Stat Name</th>
-                  <th>Value</th>
-                  <th>Bonus from Race</th>
-                  <th>Modifier</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td onClick={this.fetchAbilityScoreInfo} id='1' style={{cursor: 'pointer'}}> Strength </td>
-                  <td><input type='text' onChange={e => this.setState({str: e.target.value})} value={this.state.str}/></td>
-                  <td>{this.state.race.ability_bonuses[0]}</td>
-                  <td>{this.calcMod(this.state.str)}</td>
-                </tr>
-                <tr>
-                  <td onClick={this.fetchAbilityScoreInfo} id='2' style={{cursor: 'pointer'}}>Dexterity</td>
-                  <td><input type='text' onChange={e => this.setState({dex: e.target.value})} value={this.state.dex} /></td>
-                  <td>{this.state.race.ability_bonuses[1]}</td>
-                  <td>{this.calcMod(this.state.dex)}</td>
-                </tr>
-                <tr>
-                  <td onClick={this.fetchAbilityScoreInfo} id='3' style={{cursor: 'pointer'}}>Constitution</td>
-                  <td><input type='text' onChange={this.handleConInput} value={this.state.con} /></td>
-                  <td>{this.state.race.ability_bonuses[2]}</td>
-                  <td>{this.calcMod(this.state.con)}</td>
-                </tr>
-                <tr>
-                  <td onClick={this.fetchAbilityScoreInfo} id='4' style={{cursor: 'pointer'}}>Intelligence</td>
-                  <td><input type='text' onChange={e => this.setState({int: e.target.value})} value={this.state.int} /></td>
-                  <td>{this.state.race.ability_bonuses[3]}</td>
-                  <td>{this.calcMod(this.state.int)}</td>
-                </tr>
-                <tr>
-                  <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Wisdom</td>
-                  <td><input type='text' onChange={e => this.setState({wis: e.target.value})} value={this.state.wis} /></td>
-                  <td>{this.state.race.ability_bonuses[4]}</td>
-                  <td>{this.calcMod(this.state.wis)}</td>
-                </tr>
-                <tr>
-                  <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Charisma</td>
-                  <td><input type='text' onChange={e => this.setState({cha: e.target.value})} value={this.state.cha} /></td>
-                  <td>{this.state.race.ability_bonuses[5]}</td>
-                  <td>{this.calcMod(this.state.cha)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-          <fieldset>
-            <legend>Bio</legend>
-            <textarea onChange={e => this.setState({bio: e.target.value})} value={this.state.bio} placeholder="Where did your character come from?"></textarea>
-          </fieldset>
-          {spellcastingDiv}
+        <div className="rowField">
+          <div className="char-field container">
+            <fieldset>
+              <legend>Bio</legend>
+              <textarea rows='15' onChange={e => this.setState({bio: e.target.value})} value={this.state.bio} placeholder="Where did your character come from?"></textarea>
+            </fieldset>
+          </div>
+          <div className="char-field container">
+            {spellcastingDiv}
+          </div>
+        </div>
         <form onSubmit={this.handleSubmit}>
           <button type="submit">Create Character!</button>
         </form>
