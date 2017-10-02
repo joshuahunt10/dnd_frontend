@@ -8,6 +8,7 @@ class GameConfig extends Component {
     super(props);
     this.state = {
       token: localStorage.get("JWT"),
+      adminUser: "",
       game: {
         Characters: [],
         description: "",
@@ -16,8 +17,10 @@ class GameConfig extends Component {
       userId: "",
       userName: ""
     }
+
     this.fetchGames = this.fetchGames.bind(this);
     this.fetchUser = this.fetchUser.bind(this);
+    this.fetchAdminUser = this.fetchAdminUser.bind(this);
   }
 
   componentDidMount(){
@@ -55,13 +58,34 @@ class GameConfig extends Component {
     })
     .then(r => r.json())
     .then(json => {
+      console.log('fetching game', json);
       this.setState({
         game: json
+      }, () => {
+        this.fetchAdminUser(this.state.game.adminUserId)
       })
     })
   }
 
-
+  fetchAdminUser (adminUserId){
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/userdetails`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: adminUserId
+      }),
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      console.log('json from api/userdetails', json);
+      this.setState({
+        adminUser: json.name
+      })
+    })
+  }
   render() {
     let userChar = <span />
     let charList = (
@@ -71,8 +95,6 @@ class GameConfig extends Component {
         )
       })
     )
-
-
     if(this.state.game.Characters.length === 0 && this.state.game.adminUserId !== this.state.userId){
       userChar = (
         <div>
@@ -121,7 +143,7 @@ class GameConfig extends Component {
       <div className='container game-config-container'>
         <div className='game-config-head'>
           <h1>{this.state.game.title}</h1>
-          <h4>The Master of this World: {this.state.userName}</h4>
+          <h4>The Master of this World: {this.state.adminUser}</h4>
           <hr />
           <label>About this game:</label> <p>{this.state.game.description}</p>
         </div>
