@@ -250,3 +250,17 @@ a {
   width: 100%;
   height:auto;
 }
+
+.charSheet{
+  font-family: bookmania, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.intervalButt{
+  margin: 0% 1%;
+}
+#savingThrows{
+  font-size: 1.4rem;
+}

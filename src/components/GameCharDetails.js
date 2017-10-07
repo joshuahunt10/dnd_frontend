@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import localStorage from 'local-storage'
-// import SpellComp from './SpellComp'
+import SpellCasting from './SpellCasting'
 import {Redirect} from 'react-router-dom'
+import {Modal, Button} from 'react-bootstrap'
+
 
 // put pure calculations here that don't need state / props
 
@@ -31,6 +33,9 @@ class GameCharDetails extends Component {
     super(props);
     this.state = {
       token: localStorage.get("JWT"),
+      modalText: '',
+      modalTitle: '',
+      showModal: false,
       id: "",
       str: "",
       dex: "",
@@ -46,6 +51,7 @@ class GameCharDetails extends Component {
       raceName: "",
       background: "",
       bio: "",
+      spellcastingAbility: "",
       skillProf: [],
       one: 999,
       two: 0,
@@ -65,12 +71,20 @@ class GameCharDetails extends Component {
       race: {
         size: "",
         speed: 0,
-        starting_proficiencies: []
+        starting_proficiencies: [],
+        subraces:[{
+          name:"",
+          url: ""
+        }]
       },
       class: {
         proficiencies : [],
         spellcasting : "",
         saving_throws: [{
+          url: ""
+        }],
+        subclasses: [{
+          name: "",
           url: ""
         }]
       }
@@ -90,6 +104,17 @@ class GameCharDetails extends Component {
     fetch(`http://www.dnd5eapi.co/api/classes/${classID}`).then(r => r.json()).then(json => {
       console.log('class json', json);
       this.setState({class: json})
+      if(this.state.class.spellcasting){
+        console.log('spallcasting here');
+        fetch(`${this.state.class.spellcasting.url}`)
+        .then(r => r.json())
+        .then(json => {
+          console.log('spellcasting',json);
+          this.setState({
+            spellcastingAbility: json.spellcasting_ability.name
+          })
+        })
+      }
     })
     fetch(`http://www.dnd5eapi.co/api/races/${raceID}`).then(r => r.json()).then(json => {
       console.log('race json', json);
@@ -212,125 +237,63 @@ class GameCharDetails extends Component {
     })
   }
 
+  handleStateUpdate = (stat, value) => {
+    this.setState({
+      [stat]: value
+    })
+  }
+
+
+  handleSubClassFetch = (e) => {
+    console.log('handle sub class fetch');
+    fetch(`${e.target.id}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log(json);
+      this.setState({
+        modalText: json.desc[0],
+        modalTitle: json.name,
+        showModal: true,
+        dataToggle: "modal"
+      })
+    })
+  }
+
+  handleSubRaceFetch = (e) => {
+    fetch(`${e.target.id}`)
+    .then(r => r.json())
+    .then(json => {
+      console.log(json);
+      this.setState({
+        modalText: json.desc,
+        modalTitle: json.name,
+        showModal: true
+      })
+    })
+  }
+
   render() {
     let char = this.state
     let hp = calcHP(char.hitDie, char.level, calcMod(char.con))
-    let spellcastingDiv = <div></div>
     if (this.state.class.spellcasting) {
-      spellcastingDiv = (
-        <fieldset>
-          <legend>Spellcasting</legend>
-          <p>Your spellist can be found in the PHB (players handbook) starting on page 207</p>
-          <p>Your spellcasting modifier is
-            <strong>{this.state.spellcastingAbility}</strong>
-          </p>
-          <p>Your spell save DC is 8 + {this.state.spellcastingAbility}
-            modifier + proficiency bonus</p>
-          <p>Your spellcasting attack modifier is your {this.state.spellcastingAbility}
-            modifier + proficiency bonus</p>
-          <label>Spells prepared:</label>
-          <textarea onChange={e => this.setState({spellList: e.target.value})} value={this.state.spellList} placeholder="List of spells"></textarea>
-          <table>
-            <thead>
-              <tr>
-                <th>Spell Slot Level</th>
-                <th>Number of Slots</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>{this.state.one}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("one")}>+</button>
-                  <button onClick={() => this.decreaseStat("one")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>{this.state.two}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("two")}>+</button>
-                  <button onClick={() => this.decreaseStat("two")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>{this.state.three}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("three")}>+</button>
-                  <button onClick={() => this.decreaseStat("three")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>{this.state.four}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("four")}>+</button>
-                  <button onClick={() => this.decreaseStat("four")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>{this.state.five}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("five")}>+</button>
-                  <button onClick={() => this.decreaseStat("five")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>{this.state.six}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("six")}>+</button>
-                  <button onClick={() => this.decreaseStat("six")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>{this.state.seven}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("seven")}>+</button>
-                  <button onClick={() => this.decreaseStat("seven")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td>{this.state.eight}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("eight")}>+</button>
-                  <button onClick={() => this.decreaseStat("eight")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>{this.state.nine}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("nine")}>+</button>
-                  <button onClick={() => this.decreaseStat("nine")}>-</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </fieldset>
-      )
+
     }
     if (this.state.success) {
       return <Redirect to='/dashboard'/>
     }
     return (
-      <div className='container'>
+      <div className='container charSheet'>
         <div className="rowField">
           <div className='char-field container'>
-            <p>Character Name: {char.charName}</p>
-            <p>You are playing a level {char.level} {char.raceName} {char.className}
-              with the background of {char.background}.</p>
+            <p>Character Name: <strong><span style={{textTransform: 'capitalize', fontSize: '1.5rem'}}>{char.charName}</span></strong></p>
+            <p>You are playing a level <strong>{char.level} {char.raceName} {char.className} </strong>
+              with the background of <span style={{textTransform: 'capitalize'}}>{char.background}</span>.</p>
 
-            <p>Level: {char.level}
-              <button onClick={() => this.increaseStat("level")}>+</button>
-              <button onClick={() => this.decreaseStat("level")}>-</button>
+            <p>Level: <strong>{char.level}</strong><br />
+              <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("level")}>+</button>
+              <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("level")}>-</button>
             </p>
-            <p>Max HP: {hp}</p>
+            <p>Max HP: <strong>{hp}</strong></p>
             <p>Current HP:
               <input onChange={e => this.setState({currentHP: e.target.value})} value={this.state.currentHP}/></p>
             <p>Size: {char.race.size}</p>
@@ -371,21 +334,34 @@ class GameCharDetails extends Component {
               </legend>
               <h4>Subclass:
               </h4>
-              <p>{this.state.subClass}</p>
+              {this.state.class.subclasses.map((sc, index) => {
+                return(
+                  <div key={index}>
+                    <p id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{this.state.subClass}</p>
+                  </div>
+                )
+              })}
               <h4>Subrace:</h4>
-              <p>{this.state.subRace}</p>
+              {this.state.race.subraces.map((sr, index) => {
+                return(
+                  <div key={index}>
+                    <p id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{this.state.subRace}</p>
+                  </div>
+                )
+              })}
+
             </fieldset>
           </div>
           <div className='char-field container'>
             <fieldset>
               <legend>Stats</legend>
-              <h4>Saving Throws</h4>
+              <h4 id='savingThrows'>Saving Throws</h4>
               {this.state.class.saving_throws.map((stat, index) => {
                 return(
-                  <span key={index}> {stat.name}</span>
+                  <span key={index}><strong> {stat.name} </strong></span>
                 )
               })}
-              <table>
+              <table className='table table-hover table-responsive'>
                 <thead>
                   <tr>
                     <th>Stat</th>
@@ -400,8 +376,8 @@ class GameCharDetails extends Component {
                     <td>{char.str}</td>
                     <td>{calcMod(char.str)}</td>
                     <td>
-                      <button onClick={() => this.increaseStat("str")}>+</button>
-                      <button onClick={() => this.decreaseStat("str")}>-</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("str")}>+</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("str")}>-</button>
                     </td>
                   </tr>
                   <tr>
@@ -409,8 +385,8 @@ class GameCharDetails extends Component {
                     <td>{char.dex}</td>
                     <td>{calcMod(char.dex)}</td>
                     <td>
-                      <button onClick={() => this.increaseStat("dex")}>+</button>
-                      <button onClick={() => this.decreaseStat("dex")}>-</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("dex")}>+</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("dex")}>-</button>
                     </td>
                   </tr>
                   <tr>
@@ -418,8 +394,8 @@ class GameCharDetails extends Component {
                     <td>{char.con}</td>
                     <td>{calcMod(char.con)}</td>
                     <td>
-                      <button onClick={() => this.increaseStat("con")}>+</button>
-                      <button onClick={() => this.decreaseStat("con")}>-</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("con")}>+</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("con")}>-</button>
                     </td>
                   </tr>
                   <tr>
@@ -427,8 +403,8 @@ class GameCharDetails extends Component {
                     <td>{char.int}</td>
                     <td>{calcMod(char.int)}</td>
                     <td>
-                      <button onClick={() => this.increaseStat("int")}>+</button>
-                      <button onClick={() => this.decreaseStat("int")}>-</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("int")}>+</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("int")}>-</button>
                     </td>
                   </tr>
                   <tr>
@@ -436,8 +412,8 @@ class GameCharDetails extends Component {
                     <td>{char.wis}</td>
                     <td>{calcMod(char.wis)}</td>
                     <td>
-                      <button onClick={() => this.increaseStat("wis")}>+</button>
-                      <button onClick={() => this.decreaseStat("wis")}>-</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("wis")}>+</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("wis")}>-</button>
                     </td>
                   </tr>
                   <tr>
@@ -445,8 +421,8 @@ class GameCharDetails extends Component {
                     <td>{char.cha}</td>
                     <td>{calcMod(char.cha)}</td>
                     <td>
-                      <button onClick={() => this.increaseStat("cha")}>+</button>
-                      <button onClick={() => this.decreaseStat("cha")}>-</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("cha")}>+</button>
+                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("cha")}>-</button>
                     </td>
                   </tr>
                 </tbody>
@@ -464,7 +440,35 @@ class GameCharDetails extends Component {
             </fieldset>
           </div>
           <div className="char-field container">
-            {spellcastingDiv}
+          {this.state.class.spellcasting ? <SpellCasting
+            spellcastingAbility={this.state.spellcastingAbility}
+            spellList = {this.state.spellList}
+            one = {this.state.one}
+            two = {this.state.two}
+            three = {this.state.three}
+            four = {this.state.four}
+            five = {this.state.five}
+            six = {this.state.six}
+            seven = {this.state.seven}
+            eight = {this.state.eight}
+            nine = {this.state.nine}
+            handleStateUpdate = {this.handleStateUpdate}
+          /> : <div><fieldset><legend>Spellcasting</legend>This class does not have any spells to cast</fieldset></div>}
+
+            {/* <SpellCasting
+              spellcastingAbility={this.state.spellcastingAbility}
+              spellList = {this.state.spellList}
+              one = {this.state.one}
+              two = {this.state.two}
+              three = {this.state.three}
+              four = {this.state.four}
+              five = {this.state.five}
+              six = {this.state.six}
+              seven = {this.state.seven}
+              eight = {this.state.eight}
+              nine = {this.state.nine}
+              handleStateUpdate = {this.handleStateUpdate}
+            /> */}
           </div>
         </div>
 
@@ -474,6 +478,19 @@ class GameCharDetails extends Component {
           <button type="submit">Finished! Submit Updated Sheet</button>
         </form>
 
+
+        <div className="container modal-div">
+          <Modal animation={false} show={this.state.showModal} onHide={this.close}>
+            <Modal.Body>
+              <h1>{this.state.modalTitle}</h1>
+              <p>{this.state.modalText}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={e => this.setState({showModal: false})}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+
+        </div>
       </div>
     );
   }
