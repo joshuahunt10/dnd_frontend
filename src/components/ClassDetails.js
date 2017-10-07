@@ -7,6 +7,7 @@ class ClassDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      dataToggle: "",
       textBoxDisable: true,
       subRaceDisable: true,
       token: "",
@@ -156,6 +157,7 @@ class ClassDetails extends Component {
   }
 
   handleSubClassFetch(e){
+    console.log('handle sub class fetch');
     fetch(`${e.target.id}`)
     .then(r => r.json())
     .then(json => {
@@ -163,7 +165,8 @@ class ClassDetails extends Component {
       this.setState({
         modalText: json.desc[0],
         modalTitle: json.name,
-        showModal: true
+        showModal: true,
+        dataToggle: "modal"
       })
     })
   }
@@ -572,15 +575,19 @@ class ClassDetails extends Component {
         <form onSubmit={this.handleSubmit}>
           <button type="submit">Create Character!</button>
         </form>
-         <Modal show={this.state.showModal} onHide={this.close}>
-           <Modal.Body>
-             <h1>{this.state.modalTitle}</h1>
-             <p>{this.state.modalText}</p>
-           </Modal.Body>
-           <Modal.Footer>
-             <Button onClick={e => this.setState({showModal: false})}>Close</Button>
-           </Modal.Footer>
-        </Modal>
+
+        <div className="container modal-div">
+          <Modal animation={false} show={this.state.showModal} onHide={this.close}>
+            <Modal.Body>
+              <h1>{this.state.modalTitle}</h1>
+              <p>{this.state.modalText}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={e => this.setState({showModal: false})}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+
+        </div>
       </div>
     );
   }

@@ -69,7 +69,10 @@ class GameCharDetails extends Component {
       },
       class: {
         proficiencies : [],
-        spellcasting : ""
+        spellcasting : "",
+        saving_throws: [{
+          url: ""
+        }]
       }
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -316,133 +319,156 @@ class GameCharDetails extends Component {
       return <Redirect to='/dashboard'/>
     }
     return (
-      <div>
-        <div className='char-field'>
-          <p>Character Name: {char.charName}</p>
-          <p>You are playing a level {char.level} {char.raceName} {char.className}
-            with the background of {char.background}. Your background story is:
-            <br/> {char.bio}</p>
-          <p>Size: {char.race.size}</p>
-          <p>Speed: {char.race.speed}</p>
-          <p>Level: {char.level}
-            <button onClick={() => this.increaseStat("level")}>+</button>
-            <button onClick={() => this.decreaseStat("level")}>-</button>
-          </p>
-          <p>Max HP: {hp}</p>
-          <p>Current HP:
-            <input onChange={e => this.setState({currentHP: e.target.value})} value={this.state.currentHP}/></p>
+      <div className='container'>
+        <div className="rowField">
+          <div className='char-field container'>
+            <p>Character Name: {char.charName}</p>
+            <p>You are playing a level {char.level} {char.raceName} {char.className}
+              with the background of {char.background}.</p>
+
+            <p>Level: {char.level}
+              <button onClick={() => this.increaseStat("level")}>+</button>
+              <button onClick={() => this.decreaseStat("level")}>-</button>
+            </p>
+            <p>Max HP: {hp}</p>
+            <p>Current HP:
+              <input onChange={e => this.setState({currentHP: e.target.value})} value={this.state.currentHP}/></p>
+            <p>Size: {char.race.size}</p>
+            <p>Speed: {char.race.speed}</p>
+          </div>
+          <div className="char-field container">
+              <h4>Proficiencies:</h4>
+              <ul>
+                {char.skillProf.map((skill, index) => <li key={index}>{skill}</li>)}
+              </ul>
+              <h4>Armor and Weapon Profeciencies</h4>
+              <ul>
+                {this.state.class.proficiencies.map((prof, index) => {
+                  return (
+                    <div key={index}>
+                      <li>{prof.name}</li>
+                    </div>
+                  )
+                })}
+              </ul>
+              <h4>Profeciencies from your race</h4>
+              <ul>
+                {this.state.race.starting_proficiencies.map((prof, index) => {
+                  return (
+                    <div key={index}>
+                      <li>{prof.name}</li>
+                    </div>
+                  )
+                })}
+              </ul>
+          </div>
         </div>
-        <div className="char-field">
-          <fieldset>
-            <legend>
-              Options for subclasses and subraces
-            </legend>
-            <h4>Subclass:
-            </h4>
-            <p>{this.state.subClass}</p>
-            <h4>Subrace:</h4>
-            <p>{this.state.subRace}</p>
-          </fieldset>
+        <div className="rowField">
+          <div className="char-field container">
+            <fieldset>
+              <legend>
+                Subclasses and Subraces
+              </legend>
+              <h4>Subclass:
+              </h4>
+              <p>{this.state.subClass}</p>
+              <h4>Subrace:</h4>
+              <p>{this.state.subRace}</p>
+            </fieldset>
+          </div>
+          <div className='char-field container'>
+            <fieldset>
+              <legend>Stats</legend>
+              <h4>Saving Throws</h4>
+              {this.state.class.saving_throws.map((stat, index) => {
+                return(
+                  <span key={index}> {stat.name}</span>
+                )
+              })}
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stat</th>
+                    <th>Value</th>
+                    <th>Modifier</th>
+                    <th>Update Stat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Strength</td>
+                    <td>{char.str}</td>
+                    <td>{calcMod(char.str)}</td>
+                    <td>
+                      <button onClick={() => this.increaseStat("str")}>+</button>
+                      <button onClick={() => this.decreaseStat("str")}>-</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Dexterity</td>
+                    <td>{char.dex}</td>
+                    <td>{calcMod(char.dex)}</td>
+                    <td>
+                      <button onClick={() => this.increaseStat("dex")}>+</button>
+                      <button onClick={() => this.decreaseStat("dex")}>-</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Constitution</td>
+                    <td>{char.con}</td>
+                    <td>{calcMod(char.con)}</td>
+                    <td>
+                      <button onClick={() => this.increaseStat("con")}>+</button>
+                      <button onClick={() => this.decreaseStat("con")}>-</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Intelligence</td>
+                    <td>{char.int}</td>
+                    <td>{calcMod(char.int)}</td>
+                    <td>
+                      <button onClick={() => this.increaseStat("int")}>+</button>
+                      <button onClick={() => this.decreaseStat("int")}>-</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Wisdom</td>
+                    <td>{char.wis}</td>
+                    <td>{calcMod(char.wis)}</td>
+                    <td>
+                      <button onClick={() => this.increaseStat("wis")}>+</button>
+                      <button onClick={() => this.decreaseStat("wis")}>-</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Charisma</td>
+                    <td>{char.cha}</td>
+                    <td>{calcMod(char.cha)}</td>
+                    <td>
+                      <button onClick={() => this.increaseStat("cha")}>+</button>
+                      <button onClick={() => this.decreaseStat("cha")}>-</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          </div>
         </div>
-        <div className='char-field'>
-          <table>
-            <thead>
-              <tr>
-                <th>Stat</th>
-                <th>Value</th>
-                <th>Modifier</th>
-                <th>Update Stat</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Strength</td>
-                <td>{char.str}</td>
-                <td>{calcMod(char.str)}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("str")}>+</button>
-                  <button onClick={() => this.decreaseStat("str")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>Dexterity</td>
-                <td>{char.dex}</td>
-                <td>{calcMod(char.dex)}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("dex")}>+</button>
-                  <button onClick={() => this.decreaseStat("dex")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>Constitution</td>
-                <td>{char.con}</td>
-                <td>{calcMod(char.con)}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("con")}>+</button>
-                  <button onClick={() => this.decreaseStat("con")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>Intelligence</td>
-                <td>{char.int}</td>
-                <td>{calcMod(char.int)}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("int")}>+</button>
-                  <button onClick={() => this.decreaseStat("int")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>Wisdom</td>
-                <td>{char.wis}</td>
-                <td>{calcMod(char.wis)}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("wis")}>+</button>
-                  <button onClick={() => this.decreaseStat("wis")}>-</button>
-                </td>
-              </tr>
-              <tr>
-                <td>Charisma</td>
-                <td>{char.cha}</td>
-                <td>{calcMod(char.cha)}</td>
-                <td>
-                  <button onClick={() => this.increaseStat("cha")}>+</button>
-                  <button onClick={() => this.decreaseStat("cha")}>-</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="char-field">
-          <h4>Proficiencies:</h4>
-          <ul>
-            {char.skillProf.map((skill, index) => <li key={index}>{skill}</li>)}
-          </ul>
-          <h4>Armor and Weapon Profeciencies</h4>
-          <ul>
-            {this.state.class.proficiencies.map((prof, index) => {
-              return (
-                <div key={index}>
-                  <li>{prof.name}</li>
-                </div>
-              )
-            })}
-          </ul>
-          <h4>Profeciencies from your race</h4>
-          <ul>
-            {this.state.race.starting_proficiencies.map((prof, index) => {
-              return (
-                <div key={index}>
-                  <li>{prof.name}</li>
-                </div>
-              )
-            })}
-          </ul>
+        <div className="rowField">
+          <div className="char-field container container">
+            <fieldset>
+              <legend>Bio</legend>
+              <p>
+              {char.bio}
+              </p>
+            </fieldset>
+          </div>
+          <div className="char-field container">
+            {spellcastingDiv}
+          </div>
         </div>
 
 
-        <div className="char-field">
-          {spellcastingDiv}
-        </div>
 
         <form onSubmit={this.handleSubmit}>
           <button type="submit">Finished! Submit Updated Sheet</button>
