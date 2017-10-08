@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Modal, Button} from 'react-bootstrap'
 import {Redirect} from 'react-router-dom'
 import localStorage from "local-storage"
+import SpellCasting from './SpellCasting'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -30,17 +31,15 @@ class ClassDetails extends Component {
       charName: undefined,
       bio: "",
       spellcastingAbility: "",
-      spellSlots: {
-        one: 0,
-        two: 0,
-        three: 0,
-        four: 0,
-        five: 0,
-        six: 0,
-        seven: 0,
-        eight: 0,
-        nine: 0
-      },
+      one: 0,
+      two: 0,
+      three: 0,
+      four: 0,
+      five: 0,
+      six: 0,
+      seven: 0,
+      eight: 0,
+      nine: 0,
       spellList: "",
       createChar: false,
       class: {
@@ -85,8 +84,6 @@ class ClassDetails extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleSubRaceFetch = this.handleSubRaceFetch.bind(this)
     this.calcHP = this.calcHP.bind(this)
-    this.increaseStat = this.increaseStat.bind(this)
-    this.decreaseStat = this.decreaseStat.bind(this)
     this.handleConInput = this.handleConInput.bind(this)
   }
 
@@ -239,15 +236,15 @@ class ClassDetails extends Component {
         bio: this.state.bio,
         skillProf: this.state.skillProf,
         hitDie: this.state.class.hit_die,
-        one: this.state.spellSlots.one,
-        two: this.state.spellSlots.two,
-        three: this.state.spellSlots.three,
-        four: this.state.spellSlots.four,
-        five: this.state.spellSlots.five,
-        six: this.state.spellSlots.six,
-        seven: this.state.spellSlots.seven,
-        eight: this.state.spellSlots.eight,
-        nine: this.state.spellSlots.nine,
+        one: this.state.one,
+        two: this.state.two,
+        three: this.state.three,
+        four: this.state.four,
+        five: this.state.five,
+        six: this.state.six,
+        seven: this.state.seven,
+        eight: this.state.eight,
+        nine: this.state.nine,
         spellList: this.state.spellList,
         GameId: this.props.match.params.gameId
       }),
@@ -267,23 +264,9 @@ class ClassDetails extends Component {
     })
   }
 
-  increaseStat(stat){
-    let val = this.state.spellSlots[stat]
+  handleStateUpdate = (stat, value) => {
     this.setState({
-      spellSlots:{
-        ...this.state.spellSlots,
-        [stat]: val + 1
-      }
-    })
-  }
-
-  decreaseStat(stat){
-    let val = this.state.spellSlots[stat]
-    this.setState({
-      spellSlots:{
-        ...this.state.spellSlots,
-        [stat]: val - 1
-      }
+      [stat]: value
     })
   }
 
@@ -299,75 +282,6 @@ class ClassDetails extends Component {
   render() {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
-    }
-    let spellcastingDiv = <div></div>
-    if(this.state.spellcastingAbility){
-      spellcastingDiv = (
-        <fieldset>
-          <legend>Spellcasting</legend>
-          <p>Your spellist can be found in the PHB (players handbook) starting on page 207</p>
-          <p>Your spellcasting modifier is <strong>{this.state.spellcastingAbility}</strong></p>
-          <p>Your spell save DC is 8 + {this.state.spellcastingAbility} modifier + proficiency bonus</p>
-          <p>Your spellcasting attack modifier is your {this.state.spellcastingAbility} modifier + proficiency bonus</p>
-          <label>Spells prepared:</label>
-          <textarea onChange={e => this.setState({spellList: e.target.value})} value={this.state.spellList} placeholder="List of spells"></textarea>
-          <table>
-            <thead>
-              <tr>
-                <th>Spell Slot Level</th>
-                <th>Number of Slots</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>{this.state.spellSlots.one}</td>
-                <td><button onClick={() => this.increaseStat("one")}>+</button> <button onClick={() => this.decreaseStat("one")}>-</button></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>{this.state.spellSlots.two}</td>
-                <td><button onClick={() => this.increaseStat("two")}>+</button> <button onClick={() => this.decreaseStat("two")}>-</button></td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>{this.state.spellSlots.three}</td>
-                <td><button onClick={() => this.increaseStat("three")}>+</button> <button onClick={() => this.decreaseStat("three")}>-</button></td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>{this.state.spellSlots.four}</td>
-                <td><button onClick={() => this.increaseStat("four")}>+</button> <button onClick={() => this.decreaseStat("four")}>-</button></td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>{this.state.spellSlots.five}</td>
-                <td><button onClick={() => this.increaseStat("five")}>+</button> <button onClick={() => this.decreaseStat("five")}>-</button></td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>{this.state.spellSlots.six}</td>
-                <td><button onClick={() => this.increaseStat("six")}>+</button> <button onClick={() => this.decreaseStat("six")}>-</button></td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>{this.state.spellSlots.seven}</td>
-                <td><button onClick={() => this.increaseStat("seven")}>+</button> <button onClick={() => this.decreaseStat("seven")}>-</button></td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td>{this.state.spellSlots.eight}</td>
-                <td><button onClick={() => this.increaseStat("eight")}>+</button> <button onClick={() => this.decreaseStat("eight")}>-</button></td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>{this.state.spellSlots.nine}</td>
-                <td><button onClick={() => this.increaseStat("nine")}>+</button> <button onClick={() => this.decreaseStat("nine")}>-</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </fieldset>
-      )
     }
     return (
       <div className='container'>
@@ -569,7 +483,20 @@ class ClassDetails extends Component {
             </fieldset>
           </div>
           <div className="char-field container">
-            {spellcastingDiv}
+            {this.state.class.spellcasting ? <SpellCasting
+              spellcastingAbility={this.state.spellcastingAbility}
+              spellList = {this.state.spellList}
+              one = {this.state.one}
+              two = {this.state.two}
+              three = {this.state.three}
+              four = {this.state.four}
+              five = {this.state.five}
+              six = {this.state.six}
+              seven = {this.state.seven}
+              eight = {this.state.eight}
+              nine = {this.state.nine}
+              handleStateUpdate = {this.handleStateUpdate}
+            /> : <div><fieldset><legend>Spellcasting</legend>This class does not have any spells to cast</fieldset></div>}
           </div>
         </div>
         <form onSubmit={this.handleSubmit}>

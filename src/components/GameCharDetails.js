@@ -102,14 +102,11 @@ class GameCharDetails extends Component {
 
   fetchCharAPI(classID, raceID) {
     fetch(`http://www.dnd5eapi.co/api/classes/${classID}`).then(r => r.json()).then(json => {
-      console.log('class json', json);
       this.setState({class: json})
       if(this.state.class.spellcasting){
-        console.log('spallcasting here');
         fetch(`${this.state.class.spellcasting.url}`)
         .then(r => r.json())
         .then(json => {
-          console.log('spellcasting',json);
           this.setState({
             spellcastingAbility: json.spellcasting_ability.name
           })
@@ -117,7 +114,6 @@ class GameCharDetails extends Component {
       }
     })
     fetch(`http://www.dnd5eapi.co/api/races/${raceID}`).then(r => r.json()).then(json => {
-      console.log('race json', json);
       this.setState({race: json})
     })
 
@@ -132,7 +128,6 @@ class GameCharDetails extends Component {
         'Content-Type': 'application/json'
       }
     }).then(r => r.json()).then(json => {
-      console.log('json from character details', json);
       this.setState({
         id: json.id,
         str: json.str,
@@ -166,7 +161,6 @@ class GameCharDetails extends Component {
         subClass: json.subClass
 
       }, () => {
-        console.log('this.state in callback of setState', this.state);
         this.fetchCharAPI(this.state.classId, this.state.raceId)
       })
     })
@@ -175,7 +169,6 @@ class GameCharDetails extends Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    console.log('button working');
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/update`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -204,22 +197,7 @@ class GameCharDetails extends Component {
         'Content-Type': 'application/json'
       }
     }).then(r => r.json()).then(json => {
-      console.log('the response', json);
       this.setState({success: json.success})
-    })
-  }
-
-  increaseLevel(e) {
-    let lvl = parseInt(this.state.level, 10)
-    this.setState({
-      level: lvl + 1
-    })
-  }
-
-  decreaseLevel(e) {
-    let lvl = parseInt(this.state.level, 10)
-    this.setState({
-      level: lvl - 1
     })
   }
 
@@ -243,13 +221,10 @@ class GameCharDetails extends Component {
     })
   }
 
-
   handleSubClassFetch = (e) => {
-    console.log('handle sub class fetch');
     fetch(`${e.target.id}`)
     .then(r => r.json())
     .then(json => {
-      console.log(json);
       this.setState({
         modalText: json.desc[0],
         modalTitle: json.name,
@@ -263,7 +238,6 @@ class GameCharDetails extends Component {
     fetch(`${e.target.id}`)
     .then(r => r.json())
     .then(json => {
-      console.log(json);
       this.setState({
         modalText: json.desc,
         modalTitle: json.name,
@@ -440,22 +414,7 @@ class GameCharDetails extends Component {
             </fieldset>
           </div>
           <div className="char-field container">
-          {this.state.class.spellcasting ? <SpellCasting
-            spellcastingAbility={this.state.spellcastingAbility}
-            spellList = {this.state.spellList}
-            one = {this.state.one}
-            two = {this.state.two}
-            three = {this.state.three}
-            four = {this.state.four}
-            five = {this.state.five}
-            six = {this.state.six}
-            seven = {this.state.seven}
-            eight = {this.state.eight}
-            nine = {this.state.nine}
-            handleStateUpdate = {this.handleStateUpdate}
-          /> : <div><fieldset><legend>Spellcasting</legend>This class does not have any spells to cast</fieldset></div>}
-
-            {/* <SpellCasting
+            {this.state.class.spellcasting ? <SpellCasting
               spellcastingAbility={this.state.spellcastingAbility}
               spellList = {this.state.spellList}
               one = {this.state.one}
@@ -468,17 +427,12 @@ class GameCharDetails extends Component {
               eight = {this.state.eight}
               nine = {this.state.nine}
               handleStateUpdate = {this.handleStateUpdate}
-            /> */}
+            /> : <div><fieldset><legend>Spellcasting</legend>This class does not have any spells to cast</fieldset></div>}
           </div>
         </div>
-
-
-
         <form onSubmit={this.handleSubmit}>
-          <button type="submit">Finished! Submit Updated Sheet</button>
+          <button className="btn btn-success" type="submit">Finished! Submit Updated Sheet</button>
         </form>
-
-
         <div className="container modal-div">
           <Modal animation={false} show={this.state.showModal} onHide={this.close}>
             <Modal.Body>
@@ -489,7 +443,6 @@ class GameCharDetails extends Component {
               <Button onClick={e => this.setState({showModal: false})}>Close</Button>
             </Modal.Footer>
           </Modal>
-
         </div>
       </div>
     );
