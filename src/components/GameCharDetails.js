@@ -6,6 +6,7 @@ import {Modal, Button} from 'react-bootstrap'
 import BaseInfo from './DisplayCharacter/BaseInfo'
 import AllProf from './DisplayCharacter/AllProf'
 import ChosenSubClassAndRace from './DisplayCharacter/ChosenSubClassAndRace'
+import Stats from './DisplayCharacter/Stats'
 
 
 // put pure calculations here that don't need state / props
@@ -18,6 +19,7 @@ function calcMod(num) {
   }
   return Math.floor((num - 10) / 2)
 }
+
 
 function calcHP(hitDie, level, conMod) {
   let hitDieNum = parseInt(hitDie, 10)
@@ -284,83 +286,17 @@ class GameCharDetails extends Component {
             subRace = {this.state.subRace}
           />
 
-          <div className='char-field container'>
-            <fieldset>
-              <legend>Stats</legend>
-              <h4 id='savingThrows'>Saving Throws</h4>
-              {this.state.class.saving_throws.map((stat, index) => {
-                return(
-                  <span key={index}><strong> {stat.name} </strong></span>
-                )
-              })}
-              <table className='table table-hover table-responsive'>
-                <thead>
-                  <tr>
-                    <th>Stat</th>
-                    <th>Value</th>
-                    <th>Modifier</th>
-                    <th>Update Stat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Strength</td>
-                    <td>{char.str}</td>
-                    <td>{calcMod(char.str)}</td>
-                    <td>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("str")}>+</button>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("str")}>-</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Dexterity</td>
-                    <td>{char.dex}</td>
-                    <td>{calcMod(char.dex)}</td>
-                    <td>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("dex")}>+</button>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("dex")}>-</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Constitution</td>
-                    <td>{char.con}</td>
-                    <td>{calcMod(char.con)}</td>
-                    <td>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("con")}>+</button>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("con")}>-</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Intelligence</td>
-                    <td>{char.int}</td>
-                    <td>{calcMod(char.int)}</td>
-                    <td>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("int")}>+</button>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("int")}>-</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Wisdom</td>
-                    <td>{char.wis}</td>
-                    <td>{calcMod(char.wis)}</td>
-                    <td>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("wis")}>+</button>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("wis")}>-</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Charisma</td>
-                    <td>{char.cha}</td>
-                    <td>{calcMod(char.cha)}</td>
-                    <td>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("cha")}>+</button>
-                      <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("cha")}>-</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
-          </div>
+          <Stats
+            str = {this.state.str}
+            dex = {this.state.dex}
+            con = {this.state.con}
+            wis = {this.state.wis}
+            int = {this.state.int}
+            cha = {this.state.cha}
+            increaseStat = {this.increaseStat}
+            decreaseStat = {this.decreaseStat}
+            saving_throws = {this.state.class.saving_throws}
+          />
         </div>
         <div className="rowField">
           <div className="char-field container container">
