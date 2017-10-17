@@ -3,6 +3,7 @@ import localStorage from 'local-storage'
 import SpellCasting from './SpellCasting'
 import {Redirect} from 'react-router-dom'
 import {Modal, Button} from 'react-bootstrap'
+import BaseInfo from './DisplayCharacter/BaseInfo'
 
 
 // put pure calculations here that don't need state / props
@@ -244,30 +245,27 @@ class GameCharDetails extends Component {
   render() {
     let char = this.state
     let hp = calcHP(char.hitDie, char.level, calcMod(char.con))
-    if (this.state.class.spellcasting) {
-
-    }
     if (this.state.success) {
       return <Redirect to='/dashboard'/>
     }
     return (
       <div className='container charSheet'>
         <div className="rowField">
-          <div className='char-field container'>
-            <p>Character Name: <strong><span style={{textTransform: 'capitalize', fontSize: '1.5rem'}}>{char.charName}</span></strong></p>
-            <p>You are playing a level <strong>{char.level} {char.raceName} {char.className} </strong>
-              with the background of <span style={{textTransform: 'capitalize'}}>{char.background}</span>.</p>
-
-            <p>Level: <strong>{char.level}</strong><br />
-              <button className="btn btn-secondary intervalButt" onClick={() => this.increaseStat("level")}>+</button>
-              <button className="btn btn-secondary intervalButt" onClick={() => this.decreaseStat("level")}>-</button>
-            </p>
-            <p>Max HP: <strong>{hp}</strong></p>
-            <p>Current HP:
-              <input onChange={e => this.setState({currentHP: e.target.value})} value={this.state.currentHP}/></p>
-            <p>Size: {char.race.size}</p>
-            <p>Speed: {char.race.speed}</p>
-          </div>
+          <BaseInfo
+            charName={this.state.charName}
+            level = {this.state.level}
+            raceName = {this.state.raceName}
+            className = {this.state.className}
+            background = {this.state.background}
+            level = {this.state.level}
+            increaseStat = {this.increaseStat}
+            decreaseStat = {this.decreaseStat}
+            hp = {hp}
+            currentHP = {this.state.currentHP}
+            size = {this.state.race.size}
+            speed = {this.state.race.speed}
+            handleStateUpdate = {this.handleStateUpdate}
+          />
           <div className="char-field container">
               <h4>Proficiencies:</h4>
               <ul>
