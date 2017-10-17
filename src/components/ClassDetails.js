@@ -79,15 +79,9 @@ class ClassDetails extends Component {
 
       },
     }
-    this.fetchAbilityScoreInfo = this.fetchAbilityScoreInfo.bind(this)
-    this.handleSubClassFetch = this.handleSubClassFetch.bind(this)
-    this.handleSubClassCheckBox = this.handleSubClassCheckBox.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleSubRaceFetch = this.handleSubRaceFetch.bind(this)
-    this.handleConInput = this.handleConInput.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount = () =>{
     this.setState({
       token: localStorage.get("JWT")
     })
@@ -115,7 +109,7 @@ class ClassDetails extends Component {
 
   }
 
-  fetchAbilityScoreInfo(e){
+  fetchAbilityScoreInfo = (e) => {
     fetch(`http://www.dnd5eapi.co/api/ability-scores/${e.target.id}`)
     .then(r => r.json())
     .then(json => {
@@ -127,7 +121,7 @@ class ClassDetails extends Component {
     })
   }
 
-  handleSubClassFetch(e){
+  handleSubClassFetch = (e) =>{
     console.log('handle sub class fetch');
     fetch(`${e.target.id}`)
     .then(r => r.json())
@@ -142,7 +136,7 @@ class ClassDetails extends Component {
     })
   }
 
-  handleSubRaceFetch(e){
+  handleSubRaceFetch = (e) => {
     fetch(`${e.target.id}`)
     .then(r => r.json())
     .then(json => {
@@ -201,13 +195,13 @@ class ClassDetails extends Component {
     })
   }
 
-  handleSubClassCheckBox(e){
+  handleSubClassCheckBox = (e) => {
     this.setState({
       subClass: e.target.value
     })
   }
 
-  handleSubmit(e){
+  handleSubmit = (e) => {
     e.preventDefault()
     fetch(`${process.env.REACT_APP_API_SERVER}/api/user/char/create`, {
       method: "POST",
@@ -266,7 +260,7 @@ class ClassDetails extends Component {
     })
   }
 
-  handleConInput(e){
+  handleConInput = (e) => {
     let currentHP = this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(e.target.value))
     this.setState({
       con: e.target.value,
