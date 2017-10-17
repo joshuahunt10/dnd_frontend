@@ -7,6 +7,7 @@ import BasicInfo from './CreateCharacter/BasicInfo'
 import ClassInfo from './CreateCharacter/ClassInfo'
 import ProfChoice from './CreateCharacter/ProfChoice'
 import SubClassAndRace from './CreateCharacter/SubClassAndRace'
+import StatsTable from './CreateCharacter/StatsTable'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -319,67 +320,20 @@ class ClassDetails extends Component {
               handleSubClassCheckBox = {this.handleSubClassCheckBox}
             />
 
-            <div className="char-field container">
-              <fieldset>
-                <legend>Stats</legend>
-                <h4>Saving Throws</h4>
-                {this.state.class.saving_throws.map((stat, index) => {
-                  return(
-                    <span key={index}> {stat.name}</span>
-                  )
-                })}
-                <h4>Base Stats and Mods</h4>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Stat Name</th>
-                      <th>Value</th>
-                      <th>Bonus from Race</th>
-                      <th>Modifier</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td onClick={this.fetchAbilityScoreInfo} id='1' style={{cursor: 'pointer'}}> Strength </td>
-                      <td><input type='text' onChange={e => this.setState({str: e.target.value})} value={this.state.str}/></td>
-                      <td>{this.state.race.ability_bonuses[0]}</td>
-                      <td>{this.calcMod(this.state.str)}</td>
-                    </tr>
-                    <tr>
-                      <td onClick={this.fetchAbilityScoreInfo} id='2' style={{cursor: 'pointer'}}>Dexterity</td>
-                      <td><input type='text' onChange={e => this.setState({dex: e.target.value})} value={this.state.dex} /></td>
-                      <td>{this.state.race.ability_bonuses[1]}</td>
-                      <td>{this.calcMod(this.state.dex)}</td>
-                    </tr>
-                    <tr>
-                      <td onClick={this.fetchAbilityScoreInfo} id='3' style={{cursor: 'pointer'}}>Constitution</td>
-                      <td><input type='text' onChange={this.handleConInput} value={this.state.con} /></td>
-                      <td>{this.state.race.ability_bonuses[2]}</td>
-                      <td>{this.calcMod(this.state.con)}</td>
-                    </tr>
-                    <tr>
-                      <td onClick={this.fetchAbilityScoreInfo} id='4' style={{cursor: 'pointer'}}>Intelligence</td>
-                      <td><input type='text' onChange={e => this.setState({int: e.target.value})} value={this.state.int} /></td>
-                      <td>{this.state.race.ability_bonuses[3]}</td>
-                      <td>{this.calcMod(this.state.int)}</td>
-                    </tr>
-                    <tr>
-                      <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Wisdom</td>
-                      <td><input type='text' onChange={e => this.setState({wis: e.target.value})} value={this.state.wis} /></td>
-                      <td>{this.state.race.ability_bonuses[4]}</td>
-                      <td>{this.calcMod(this.state.wis)}</td>
-                    </tr>
-                    <tr>
-                      <td onClick={this.fetchAbilityScoreInfo} id='5' style={{cursor: 'pointer'}}>Charisma</td>
-                      <td><input type='text' onChange={e => this.setState({cha: e.target.value})} value={this.state.cha} /></td>
-                      <td>{this.state.race.ability_bonuses[5]}</td>
-                      <td>{this.calcMod(this.state.cha)}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </fieldset>
-            </div>
-
+            <StatsTable
+              savingThrows = {this.state.class.saving_throws}
+              fetchAbilityScoreInfo = {this.fetchAbilityScoreInfo}
+              handleStateUpdate = {this.handleStateUpdate}
+              str = {this.state.str}
+              dex = {this.state.dex}
+              con = {this.state.con}
+              int = {this.state.int}
+              wis = {this.state.wis}
+              cha = {this.state.cha}
+              ability_bonuses = {this.state.race.ability_bonuses}
+              calcMod = {this.calcMod}
+              handleConInput = {this.handleConInput}
+            />
           </div>
         </div>
         <div className="rowField">
