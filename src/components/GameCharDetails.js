@@ -71,7 +71,7 @@ class GameCharDetails extends Component {
       race: {
         size: "",
         speed: 0,
-        starting_proficiencies: [],
+        traits: [],
         subraces:[{
           name:"",
           url: ""
@@ -89,18 +89,13 @@ class GameCharDetails extends Component {
         }]
       }
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.increaseStat = this.increaseStat.bind(this)
-    this.decreaseStat = this.decreaseStat.bind(this)
-    this.fetchOneChar = this.fetchOneChar.bind(this)
-    this.fetchCharAPI = this.fetchCharAPI.bind(this)
   }
 
   componentWillMount() {
     this.fetchOneChar()
   }
 
-  fetchCharAPI(classID, raceID) {
+  fetchCharAPI = (classID, raceID) => {
     fetch(`http://www.dnd5eapi.co/api/classes/${classID}`).then(r => r.json()).then(json => {
       this.setState({class: json})
       if(this.state.class.spellcasting){
@@ -119,7 +114,7 @@ class GameCharDetails extends Component {
 
   }
 
-  fetchOneChar() {
+  fetchOneChar = () => {
     fetch(`${process.env.REACT_APP_API_SERVER}/api/user/onechar`, {
       method: "POST",
       body: JSON.stringify({charId: this.props.match.params.charId}),
@@ -167,7 +162,7 @@ class GameCharDetails extends Component {
 
   }
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault()
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/update`, {
       method: "PATCH",
@@ -201,14 +196,14 @@ class GameCharDetails extends Component {
     })
   }
 
-  increaseStat(stat) {
+  increaseStat = (stat) => {
     let val = parseInt(this.state[stat], 10)
     this.setState({
       [stat]: val + 1
     })
   }
 
-  decreaseStat(stat) {
+  decreaseStat= (stat) => {
     let val = parseInt(this.state[stat], 10)
     this.setState({
       [stat]: val - 1
@@ -290,7 +285,7 @@ class GameCharDetails extends Component {
               </ul>
               <h4>Profeciencies from your race</h4>
               <ul>
-                {this.state.race.starting_proficiencies.map((prof, index) => {
+                {this.state.race.traits.map((prof, index) => {
                   return (
                     <div key={index}>
                       <li>{prof.name}</li>
