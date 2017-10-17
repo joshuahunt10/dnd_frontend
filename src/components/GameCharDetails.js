@@ -4,6 +4,7 @@ import SpellCasting from './SpellCasting'
 import {Redirect} from 'react-router-dom'
 import {Modal, Button} from 'react-bootstrap'
 import BaseInfo from './DisplayCharacter/BaseInfo'
+import AllProf from './DisplayCharacter/AllProf'
 
 
 // put pure calculations here that don't need state / props
@@ -266,32 +267,11 @@ class GameCharDetails extends Component {
             speed = {this.state.race.speed}
             handleStateUpdate = {this.handleStateUpdate}
           />
-          <div className="char-field container">
-              <h4>Proficiencies:</h4>
-              <ul>
-                {char.skillProf.map((skill, index) => <li key={index}>{skill}</li>)}
-              </ul>
-              <h4>Armor and Weapon Profeciencies</h4>
-              <ul>
-                {this.state.class.proficiencies.map((prof, index) => {
-                  return (
-                    <div key={index}>
-                      <li>{prof.name}</li>
-                    </div>
-                  )
-                })}
-              </ul>
-              <h4>Profeciencies from your race</h4>
-              <ul>
-                {this.state.race.traits.map((prof, index) => {
-                  return (
-                    <div key={index}>
-                      <li>{prof.name}</li>
-                    </div>
-                  )
-                })}
-              </ul>
-          </div>
+          <AllProf
+            skillProf = {this.state.skillProf}
+            proficiencies = {this.state.class.proficiencies}
+            traits = {this.state.race.traits}
+          />
         </div>
         <div className="rowField">
           <div className="char-field container">
