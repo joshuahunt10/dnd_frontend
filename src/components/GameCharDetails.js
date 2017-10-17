@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom'
 import {Modal, Button} from 'react-bootstrap'
 import BaseInfo from './DisplayCharacter/BaseInfo'
 import AllProf from './DisplayCharacter/AllProf'
+import ChosenSubClassAndRace from './DisplayCharacter/ChosenSubClassAndRace'
 
 
 // put pure calculations here that don't need state / props
@@ -274,31 +275,15 @@ class GameCharDetails extends Component {
           />
         </div>
         <div className="rowField">
-          <div className="char-field container">
-            <fieldset>
-              <legend>
-                Subclasses and Subraces
-              </legend>
-              <h4>Subclass:
-              </h4>
-              {this.state.class.subclasses.map((sc, index) => {
-                return(
-                  <div key={index}>
-                    <p id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{this.state.subClass}</p>
-                  </div>
-                )
-              })}
-              <h4>Subrace:</h4>
-              {this.state.race.subraces.map((sr, index) => {
-                return(
-                  <div key={index}>
-                    <p id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{this.state.subRace}</p>
-                  </div>
-                )
-              })}
+          <ChosenSubClassAndRace
+            subclasses = {this.state.class.subclasses}
+            handleSubClassFetch = {this.handleSubClassFetch}
+            subClass = {this.state.subClass}
+            subraces = {this.state.race.subraces}
+            handleSubRaceFetch = {this.handleSubRaceFetch}
+            subRace = {this.state.subRace}
+          />
 
-            </fieldset>
-          </div>
           <div className='char-field container'>
             <fieldset>
               <legend>Stats</legend>
