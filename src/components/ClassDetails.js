@@ -6,6 +6,7 @@ import SpellCasting from './SpellCasting'
 import BasicInfo from './CreateCharacter/BasicInfo'
 import ClassInfo from './CreateCharacter/ClassInfo'
 import ProfChoice from './CreateCharacter/ProfChoice'
+import SubClassAndRace from './CreateCharacter/SubClassAndRace'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -273,6 +274,7 @@ class ClassDetails extends Component {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
+    console.log(this.state);
     return (
       <div className='container'>
         <h2>Create a Hero: Step 2 of 2</h2>
@@ -306,44 +308,17 @@ class ClassDetails extends Component {
           />
 
           <div className="colField">
-            <div className="char-field container">
-              <fieldset>
-                <legend>
-                  Options for subclasses and subraces
-                </legend>
-                <h4>Subclasses: </h4>
-                {this.state.class.subclasses.map((sc, index) => {
-                  return(
-                    <div key={index} >
-                      <input type="radio" value={sc.name} name='subclass' onChange={this.handleSubClassCheckBox}
-                      />
-                      <span id={sc.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{sc.name}</span><br />
+            <SubClassAndRace
+              subclasses = {this.state.class.subclasses}
+              handleStateUpdate = {this.handleStateUpdate}
+              handleSubClassFetch = {this.handleSubClassFetch}
+              subraces = {this.state.race.subraces}
+              handleSubRaceFetch = {this.handleSubRaceFetch}
+              textBoxDisable  = {this.state.textBoxDisable}
+              subRaceDisable = {this.state.subRaceDisable}
+              handleSubClassCheckBox = {this.handleSubClassCheckBox}
+            />
 
-                      <input type='radio' value='other' name='subclass' id='radio-other'
-                        onChange={e => this.setState({textBoxDisable: false})}
-                      />
-                      <span>Other: <input id='other-input' type='text' disabled={this.state.textBoxDisable}
-                        onChange={e => this.setState({subClass: e.target.value})}
-                      /></span>
-                    </div>
-                  )
-                })}
-                <h4>Subraces:</h4>
-                {this.state.race.subraces.map((sr, index) => {
-                  return(
-                    <div key={index}>
-                      <input type="radio"  name='subRace' value={sr.name} onChange={e => this.setState({subRace: e.target.value})} />
-                      <label id={sr.url} onClick={this.handleSubRaceFetch} style={{cursor: 'pointer'}}>{sr.name}</label>
-                      <br />
-                      <input type='radio' value='other' name='subRace' id='radio-other'
-                        onChange={e => this.setState({subRaceDisable: false})} />
-                        <span>Other: <input id='other-input' type='text' disabled={this.state.subRaceDisable}
-                          onChange={e => this.setState({subRace: e.target.value})}/></span>
-                        </div>
-                      )
-                    })}
-                  </fieldset>
-            </div>
             <div className="char-field container">
               <fieldset>
                 <legend>Stats</legend>
