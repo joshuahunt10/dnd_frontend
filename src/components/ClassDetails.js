@@ -5,6 +5,7 @@ import localStorage from "local-storage"
 import SpellCasting from './SpellCasting'
 import BasicInfo from './CreateCharacter/BasicInfo'
 import ClassInfo from './CreateCharacter/ClassInfo'
+import ProfChoice from './CreateCharacter/ProfChoice'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -79,7 +80,6 @@ class ClassDetails extends Component {
       },
     }
     this.fetchAbilityScoreInfo = this.fetchAbilityScoreInfo.bind(this)
-    this.handleProfCheckBox = this.handleProfCheckBox.bind(this)
     this.handleSubClassFetch = this.handleSubClassFetch.bind(this)
     this.handleSubClassCheckBox = this.handleSubClassCheckBox.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -178,7 +178,7 @@ class ClassDetails extends Component {
       return hp
   }
 
-  handleProfCheckBox(e){
+  handleProfCheckBox = (e) => {
     let skillProf = this.state.skillProf
     let splice = false
     let holderIndex = 0;
@@ -196,7 +196,6 @@ class ClassDetails extends Component {
     else{
       skillProf.push(e.target.value)
     }
-    console.log('this.state.skillProf',skillProf);
     this.setState({
       skillProf: skillProf
     })
@@ -306,19 +305,12 @@ class ClassDetails extends Component {
           />
         </div>
         <div className="rowField">
-          <div className="char-field container">
-            <fieldset>
-              <legend>Choose {this.state.class.proficiency_choices[0].choose} proficiencies from the below list:</legend>
-              {this.state.class.proficiency_choices[0].from.map((skill, index) => {
-                return(
-                  <div key={index}>
-                    <input type='checkbox' onChange={this.handleProfCheckBox} value={skill.name}/>
-                    <label>{skill.name}</label>
-                  </div>
-                )
-              })}
-            </fieldset>
-          </div>
+          <ProfChoice
+            numChoices = {this.state.class.proficiency_choices[0].choose}
+            choices = {this.state.class.proficiency_choices[0].from}
+            handleProfCheckBox = {this.handleProfCheckBox}
+          />
+
           <div className="colField">
             <div className="char-field container">
               <fieldset>
