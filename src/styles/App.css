@@ -264,3 +264,13 @@ a {
 #savingThrows{
   font-size: 1.4rem;
 }
+
+.create-game-form{
+  width: 350px;
+  height: 400px;
+  background-color: white;;
+  color: black;
+  margin-top: 10%;
+  border-radius: 8px;
+  padding: 2%;
+}
