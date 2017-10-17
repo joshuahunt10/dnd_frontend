@@ -3,6 +3,7 @@ import {Modal, Button} from 'react-bootstrap'
 import {Redirect} from 'react-router-dom'
 import localStorage from "local-storage"
 import SpellCasting from './SpellCasting'
+import BasicInfo from './CreateCharacter/BasicInfo'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -283,48 +284,20 @@ class ClassDetails extends Component {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
+    console.log(this.state.alignment);
     return (
       <div className='container'>
         <h2>Create a Hero: Step 2 of 2</h2>
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
         <div className="rowField">
-          <div className='char-field container'>
-            <div className="form-group col-12">
-              <label>Character Name:</label>
-              <input className="form-control" type="text" onChange={e => this.setState({charName: e.target.value})} value={this.state.charName}/>
-            </div>
-            <div className="form-group col-12">
-              <label>Level:</label>
-              <input className="form-control" type="text" onChange={e => this.setState({level: e.target.value})} value={this.state.level}/>
-            </div>
-            <div className="form-group col-12">
-              <label>Background:</label>
-              <input className="form-control" type="text" onChange={e => this.setState({background: e.target.value})} value={this.state.background}/>
-            </div>
-            <div className="form-group col-12">
-              <label>Size:</label>
-              <input className="form-control" type="text" value={this.state.race.size}/>
-            </div>
-            <div className="form-group col-12">
-              <label>Speed:</label>
-              <input className="form-control" type="text" value={this.state.race.speed}/>
-            </div>
-            <div className="form-group col-12">
-              <label>Alignment:</label>
-              <select className="form-control" onChange={e => this.setState({alignment: e.target.value})} >
-                <option value=""></option>
-                <option value="Lawful Good">Lawful Good</option>
-                <option value="Neutral Good">Neutral Good</option>
-                <option value="Chaotic Good">Chaotic Good</option>
-                <option value="Lawful Neutral">Lawful Neutral</option>
-                <option value="Neutral">Neutral</option>
-                <option value="Chaotic Neutral">Chaotic Neutral</option>
-                <option value="Lawful Evil">Lawful Evil</option>
-                <option value="Neutral Evil">Neutral Evil</option>
-                <option value="Chaotic Evil">Chaotic Evil</option>
-              </select>
-            </div>
-          </div>
+          <BasicInfo
+            handleStateUpdate = {this.handleStateUpdate}
+            charName = {this.state.charName}
+            level = {this.state.level}
+            background = {this.state.background}
+            size = {this.state.race.size}
+            speed = {this.state.race.speed}
+          />
           <div className="char-field container">
             <p>Your hit die is a d{this.state.class.hit_die}</p>
             <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
@@ -502,7 +475,6 @@ class ClassDetails extends Component {
         <form onSubmit={this.handleSubmit}>
           <button type="submit">Create Character!</button>
         </form>
-
         <div className="container modal-div">
           <Modal animation={false} show={this.state.showModal} onHide={this.close}>
             <Modal.Body>
