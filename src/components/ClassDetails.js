@@ -8,6 +8,7 @@ import ClassInfo from './CreateCharacter/ClassInfo'
 import ProfChoice from './CreateCharacter/ProfChoice'
 import SubClassAndRace from './CreateCharacter/SubClassAndRace'
 import StatsTable from './CreateCharacter/StatsTable'
+import BioInput from './CreateCharacter/BioInput'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -337,12 +338,10 @@ class ClassDetails extends Component {
           </div>
         </div>
         <div className="rowField">
-          <div className="char-field container">
-            <fieldset>
-              <legend>Bio</legend>
-              <textarea rows='15' onChange={e => this.setState({bio: e.target.value})} value={this.state.bio} placeholder="Where did your character come from?"></textarea>
-            </fieldset>
-          </div>
+          <BioInput
+            bio = {this.state.bio}
+            handleStateUpdate = {this.handleStateUpdate}
+          />
           <div className="char-field container">
             {this.state.class.spellcasting ? <SpellCasting
               spellcastingAbility={this.state.spellcastingAbility}
