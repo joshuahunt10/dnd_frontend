@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom'
 import localStorage from "local-storage"
 import SpellCasting from './SpellCasting'
 import BasicInfo from './CreateCharacter/BasicInfo'
+import ClassInfo from './CreateCharacter/ClassInfo'
 
 class ClassDetails extends Component {
   constructor(props) {
@@ -77,14 +78,12 @@ class ClassDetails extends Component {
 
       },
     }
-    this.calcMod = this.calcMod.bind(this)
     this.fetchAbilityScoreInfo = this.fetchAbilityScoreInfo.bind(this)
     this.handleProfCheckBox = this.handleProfCheckBox.bind(this)
     this.handleSubClassFetch = this.handleSubClassFetch.bind(this)
     this.handleSubClassCheckBox = this.handleSubClassCheckBox.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleSubRaceFetch = this.handleSubRaceFetch.bind(this)
-    this.calcHP = this.calcHP.bind(this)
     this.handleConInput = this.handleConInput.bind(this)
   }
 
@@ -95,14 +94,11 @@ class ClassDetails extends Component {
     fetch(`http://www.dnd5eapi.co/api/classes/${this.props.match.params.classID}`)
     .then(r => r.json())
     .then(json => {
-      console.log('class json',json);
       this.setState({class: json})
       if(this.state.class.spellcasting){
-        console.log('spallcasting here');
         fetch(`${this.state.class.spellcasting.url}`)
         .then(r => r.json())
         .then(json => {
-          console.log('spellcasting',json);
           this.setState({
             spellcastingAbility: json.spellcasting_ability.name
           })
@@ -117,29 +113,6 @@ class ClassDetails extends Component {
       this.setState({race: json})
     })
 
-  }
-
-  calcMod(num){
-    if(!num){
-      return ""
-    } else if (num > 30){
-      return 10
-    }
-    return Math.floor((num-10)/2)
-  }
-
-  calcHP(hitDie, level, conMod){
-    if(typeof conMod === 'string'){
-      return <i><strong>Enter Constitution to calculate HP</strong></i>
-    }
-      let hp = 0;
-
-      hp += hitDie + conMod
-      if(level > 1){
-        hp += ((hitDie/2 + 1) + conMod) * (level - 1)
-      }
-
-      return hp
   }
 
   fetchAbilityScoreInfo(e){
@@ -180,6 +153,29 @@ class ClassDetails extends Component {
         showModal: true
       })
     })
+  }
+
+  calcMod = (num) => {
+    if(!num){
+      return ""
+    } else if (num > 30){
+      return 10
+    }
+    return Math.floor((num-10)/2)
+  }
+
+  calcHP = (hitDie, level, conMod) => {
+    if(typeof conMod === 'string'){
+      return <i><strong>Enter Constitution to calculate HP</strong></i>
+    }
+      let hp = 0;
+
+      hp += hitDie + conMod
+      if(level > 1){
+        hp += ((hitDie/2 + 1) + conMod) * (level - 1)
+      }
+
+      return hp
   }
 
   handleProfCheckBox(e){
@@ -284,7 +280,6 @@ class ClassDetails extends Component {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
-    console.log(this.state.alignment);
     return (
       <div className='container'>
         <h2>Create a Hero: Step 2 of 2</h2>
@@ -298,39 +293,17 @@ class ClassDetails extends Component {
             size = {this.state.race.size}
             speed = {this.state.race.speed}
           />
-          <div className="char-field container">
-            <p>Your hit die is a d{this.state.class.hit_die}</p>
-            <p>Your max hp is {this.calcHP(this.state.class.hit_die, this.state.level, this.calcMod(this.state.con))}</p>
-            <h4>Armor and Weapon Profeciencies</h4>
-            <ul>
-              {this.state.class.proficiencies.map((prof, index) => {
-                return(
-                  <div key={index}>
-                    <li>{prof.name}</li>
-                  </div>
-                )
-              })}
-            </ul>
-            <h4>Profeciencies from your race</h4>
-            <ul>
-              {this.state.race.starting_proficiencies.map((prof, index) =>{
-                return(
-                  <div key={index}><li>{prof.name}</li></div>
-                )
-              })}
-            </ul>
-            <h4>Additional traits from your race</h4>
-            <ul>
-              {this.state.race.traits.map((traits, index) => {
-                return(
-                  <div key={index}>
-                    <li id={traits.url} onClick={this.handleSubClassFetch} style={{cursor: 'pointer'}}>{traits.name}
-                    </li>
-                  </div>
-                )
-              })}
-            </ul>
-          </div>
+
+          <ClassInfo
+            hitDie = {this.state.class.hit_die}
+            level = {this.state.level}
+            con = {this.state.con}
+            proficiencies = {this.state.class.proficiencies}
+            calcMod = {this.calcMod}
+            calcHP = {this.calcHP}
+            startProf = {this.state.race.starting_proficiencies}
+            traits = {this.state.race.traits}
+          />
         </div>
         <div className="rowField">
           <div className="char-field container">
