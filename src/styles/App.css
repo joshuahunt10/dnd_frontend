@@ -274,3 +274,20 @@ a {
   border-radius: 8px;
   padding: 2%;
 }
+
+.registration-wrapper{
+  padding-top: 3%;
+}
+
+.form-title{
+  text-align: center;
+  padding-top: 2%;
+}
+
+.registration-form{
+  background-color: white;
+  color:black;
+  border-radius: 8px;
+  width: 500px;
+  height: 620px;
+}

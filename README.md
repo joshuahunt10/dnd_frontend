@@ -21,5 +21,5 @@ This app is a full stack application using Node.js with Express and a postgreSQL
 * ~~Get the character sheet to store~~
 * ~~Create tables for users~~
 * ~~Setup privelages for the tables.~~
-* Mark the games that player has a character in
+* ~~Mark the games that player has a character in~~
 * Work on the styling of everything

@@ -10,7 +10,6 @@ import Splash from './Splash'
 import ClassSelect from './ClassSelect'
 import GameTables from './GameTables'
 import GameConfig from './GameConfig'
-// import UserLayout from './UserLayout'
 import ClassDetails from './ClassDetails'
 import GameCharDetails from './GameCharDetails'
 import '../styles/App.css';
