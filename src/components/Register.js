@@ -10,7 +10,8 @@ class Register extends Component {
       password: '',
       confPassword: '',
       bio: '',
-      registerSuccess: false
+      registerSuccess: false,
+      errorArray: []
     }
   }
   handleEmailInput = (e) => {
@@ -44,97 +45,78 @@ class Register extends Component {
   }
 
   nameInput = (name) => {
-    if(name){
-      console.log('name is good')
-      return true
-    }
-    else{
-      console.log('NAME is not filled in!')
+    if(!name){
       return 'Please input your name'
     }
   }
 
   emailInput = (email) => {
-    if(email){
-      console.log('email is good');
-      return true
-    }
-    else{
-      console.log('EMAIL is not filled in');
-      return false
+    if(!email){
+      return 'Please input your email'
     }
   }
 
   passwordInput = (password, confPassword) => {
-    if(this.state.password === this.state.confPassword){
-      console.log('passwords entered')
-      return true
-    }
-    else{
-      console.log('PASSWORDS are bad');
-      return false
+    if(this.state.password !== this.state.confPassword){
+      return 'Password do not match'
     }
   }
 
   passwordLength = (password) =>{
     if(password.length < 6){
-      console.log('password too short')
-      return false
-    }
-    else{
-      return true
+      return 'Password must be at least 6 characters long'
     }
   }
 
-  handleSubmit = (e) => {
+  formValidate = (e, name, email, password, confPassword) => {
     e.preventDefault()
-    console.log(this.state);
-    let formValues = [this.state.email, this.state.name, this.state.password, this.state.confPassword, this.state.bio]
-    let allInputsPass = false
+    let errors = []
+    let errorList = []
+    errors = [this.nameInput(this.state.name), this.emailInput(this.state.email), this.passwordLength(this.state.password), this.passwordInput(this.state.password, this.state.confPassword)]
+    errors.forEach(msg => {
+      if(typeof msg === 'string'){
+        errorList.push(msg)
+      }
+    })
+    if(errorList.length === 0){
+      this.setState({
+        errorArray: errorList,
 
-    let name = this.nameInput(this.state.name)
-
-    if(this.nameInput(this.state.name) && this.emailInput(this.state.email) && this.passwordInput(this.state.password, this.state.confPassword) && this.passwordLength(this.state.password) && this.state.confPassword){
-      console.log('all form is good');
+      }, this.handleSubmit())
     }
     else{
-      console.log('something is bad')
-    }
-
-
-    if(this.state.registerSuccess){
-      fetch(`${process.env.REACT_APP_API_SERVER}/api/register`,{
-        method: "POST",
-        body: JSON.stringify({
-          email: this.state.email,
-          name: this.state.name,
-          password: this.state.password,
-          bio: this.state.bio
-        }),
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-      .then(r => r.json())
-      .then(json => {
-        console.log(json)
-        if (json.status === 'success'){
-          this.setState({
-            email: '',
-            name: '',
-            password: '',
-            confPassword: '',
-            bio: '',
-            registerSuccess: true
-          })
-
-        }
+      this.setState({
+        errorArray: errorList,
       })
     }
-    else{
-      console.log('form failed');
-    }
+  }
 
+  handleSubmit = () => {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/register`,{
+      method: "POST",
+      body: JSON.stringify({
+        email: this.state.email,
+        name: this.state.name,
+        password: this.state.password,
+        bio: this.state.bio
+      }),
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      if (json.status === 'success'){
+        this.setState({
+          email: '',
+          name: '',
+          password: '',
+          confPassword: '',
+          bio: '',
+          registerSuccess: true
+        })
+      }
+    })
   }
 
   render() {
@@ -143,8 +125,15 @@ class Register extends Component {
     }
     return (
       <div className='container registration-wrapper'>
-        <form className="registration-form container" onSubmit={this.handleSubmit}>
+        <form className="registration-form container" onSubmit={this.formValidate}>
           <h3 className="form-title">Create Your Account</h3>
+          <ul>
+          {this.state.errorArray.map((err, index) => {
+            return(
+              <li key={index}>{err}</li>
+            )
+          })}
+          </ul>
           <div className="form-group">
             <label htmlFor='name'>Name</label>
             <input className="form-control" type='text' placeholder='Name' onChange={this.handleNameInput} value={this.state.name}/>
