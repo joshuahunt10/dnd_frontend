@@ -11,60 +11,66 @@ class Register extends Component {
       confPassword: '',
       bio: '',
       registerSuccess: false,
-      errorArray: []
+      errorArray: [],
+      nameWarning: "",
+      emailWarning: "",
+      passWarning: "",
+      confPassWarning: ""
     }
-  }
-  handleEmailInput = (e) => {
-      this.setState({
-        email: e.target.value
-      })
-  }
-
-  handleNameInput = (e) => {
-      this.setState({
-        name: e.target.value
-      })
-  }
-
-  handlePasswordInput = (e) => {
-      this.setState({
-        password: e.target.value
-      })
-  }
-
-  handleConfPasswordInput = (e) => {
-      this.setState({
-        confPassword: e.target.value
-      })
-  }
-
-  handleBioInput = (e) => {
-      this.setState({
-        bio: e.target.value
-      })
   }
 
   nameInput = (name) => {
     if(!name){
+      this.setState({
+        nameWarning: 'warningStyle'
+      })
       return 'Please input your name'
+    }
+    else{
+      this.setState({nameWarning: ""})
     }
   }
 
   emailInput = (email) => {
     if(!email){
+      this.setState({
+        emailWarning: 'warningStyle'
+      })
       return 'Please input your email'
+    }
+    else{
+      this.setState({emailWarning: ""})
     }
   }
 
   passwordInput = (password, confPassword) => {
     if(this.state.password !== this.state.confPassword){
+      this.setState({
+        passWarning: 'warningStyle',
+        confPassWarning: 'warningStyle'
+      })
       return 'Password do not match'
+    }
+    else{
+      this.setState({
+        passWarning: '',
+        confPassWarning: ''
+      })
     }
   }
 
+
+  // FIXME: bug here where the setState is not working fast enough?  It is not giving the warning style to the password box.
   passwordLength = (password) =>{
     if(password.length < 6){
+      this.setState({
+        passWarning: 'warningStyle',
+        confPassWarning: 'warningStyle'
+      })
       return 'Password must be at least 6 characters long'
+    }
+    else{
+      this.setState({passWarning: ""})
     }
   }
 
@@ -87,6 +93,7 @@ class Register extends Component {
     else{
       this.setState({
         errorArray: errorList,
+
       })
     }
   }
@@ -136,26 +143,23 @@ class Register extends Component {
           </ul>
           <div className="form-group">
             <label htmlFor='name'>Name</label>
-            <input className="form-control" type='text' placeholder='Name' onChange={this.handleNameInput} value={this.state.name}/>
-            <div className="invalid-feedback">
-              Please provide your name.
-            </div>
+            <input className={"form-control " + this.state.nameWarning} type='text' placeholder='Name' onChange={(e) => this.setState({name: e.target.value})} value={this.state.name}/>
           </div>
           <div className="form-group">
             <label htmlFor='email'>Email</label>
-            <input className="form-control" type='email' placeholder='Email' onChange={this.handleEmailInput} value={this.state.email}/>
+            <input className={"form-control " + this.state.emailWarning} type='email' placeholder='Email' onChange={(e) => this.setState({email: e.target.value})} value={this.state.email}/>
           </div>
           <div className="form-group">
             <label htmlFor='password'>Password</label>
-            <input className="form-control" type='password' placeholder='Password' onChange={this.handlePasswordInput} value={this.state.password}/>
+            <input className={"form-control " + this.state.passWarning} type='password' placeholder='Password' onChange={(e) => this.setState({password: e.target.value})} value={this.state.password}/>
           </div>
           <div className="form-group">
             <label htmlFor='confirm_password'>Confirm Password</label>
-            <input className="form-control" type='password' placeholder='Confirm Password' onChange={this.handleConfPasswordInput} value={this.state.confPassword}/>
+            <input className={"form-control " + this.state.confPassWarning} type='password' placeholder='Confirm Password' onChange={(e) => this.setState({confPassword: e.target.value})} value={this.state.confPassword}/>
           </div>
           <div className="form-group">
             <label htmlFor='bio'>Bio</label>
-            <textarea className="form-control" rows="5" cols="100" placeholder="Enter a Bio" onChange={this.handleBioInput} value={this.state.bio}/>
+            <textarea className="form-control" rows="5" cols="100" placeholder="Enter a Bio" onChange={(e) => this.setState({bio: e.target.value})} value={this.state.bio}/>
           </div>
           <button className="btn btn-success" type="submit">Register!</button>
         </form>
