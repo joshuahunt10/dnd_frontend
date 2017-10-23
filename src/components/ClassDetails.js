@@ -276,9 +276,8 @@ class ClassDetails extends Component {
     if(this.state.createChar){
       return <Redirect to='/dashboard' />
     }
-    console.log(this.state);
     return (
-      <div className='container'>
+      <div className='container charCreateSheet'>
         <h2>Create a Hero: Step 2 of 2</h2>
         <h3>You chose a {this.state.race.name} {this.state.class.name}</h3>
         <div className="rowField">
@@ -309,7 +308,7 @@ class ClassDetails extends Component {
             handleProfCheckBox = {this.handleProfCheckBox}
           />
 
-          <div className="colField">
+          <div className="colField container">
             <SubClassAndRace
               subclasses = {this.state.class.subclasses}
               handleStateUpdate = {this.handleStateUpdate}
@@ -360,7 +359,7 @@ class ClassDetails extends Component {
           </div>
         </div>
         <form onSubmit={this.handleSubmit}>
-          <button type="submit">Create Character!</button>
+          <button className="btn btn-success" type="submit">Create Character!</button>
         </form>
         <div className="container modal-div">
           <Modal animation={false} show={this.state.showModal} onHide={this.close}>

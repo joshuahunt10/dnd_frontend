@@ -11,7 +11,7 @@ class ProfChoice extends Component {
             return(
               <div key={index}>
                 <input type='checkbox' onChange={this.props.handleProfCheckBox} value={skill.name}/>
-                <label>{skill.name}</label>
+                <label className="profChoices">{skill.name}</label>
               </div>
             )
           })}

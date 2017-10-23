@@ -15,7 +15,7 @@ class SubClassAndRace extends Component {
             return (
               <div key={index}>
                 <input type="radio" value={sc.name} name='subclass' onChange={this.props.handleSubClassCheckBox}/>
-                <span id={sc.url} onClick={this.props.handleSubClassFetch} style={{
+                <span className="profChoices" id={sc.url} onClick={this.props.handleSubClassFetch} style={{
                   cursor: 'pointer'
                 }}>{sc.name}</span><br/>
 
@@ -30,7 +30,7 @@ class SubClassAndRace extends Component {
             return (
               <div key={index}>
                 <input type="radio" name='subRace' value={sr.name} onChange={e => this.props.handleStateUpdate("subRace", e.target.value)}/>
-                <label id={sr.url} onClick={this.props.handleSubRaceFetch} style={{
+                <label className="profChoices" id={sr.url} onClick={this.props.handleSubRaceFetch} style={{
                   cursor: 'pointer'
                 }}>{sr.name}</label>
                 <br/>

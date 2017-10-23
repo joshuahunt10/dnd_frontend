@@ -244,6 +244,7 @@ a {
   flex-basis: 50%;
   border-radius: 8px;
   margin: 0% 2% 1% 0%;
+  padding: 0;
 }
 
 .char-field textarea{
@@ -294,4 +295,16 @@ a {
 
 .warningStyle{
   border: 2px solid red;
+}
+
+.profChoices{
+  padding-left:1%;
+  font-family: bookmania;
+}
+
+.charCreateSheet{
+  font-family: bookmania, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.1rem;
 }

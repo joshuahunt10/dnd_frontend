@@ -7,19 +7,19 @@ class StatsTable extends Component {
       <div className="char-field container">
         <fieldset>
           <legend>Stats</legend>
-          <h4>Saving Throws</h4>
+          <h4 id="savingThrows">Saving Throws</h4>
           {this.props.savingThrows.map((stat, index) => {
             return(
-              <span key={index}> {stat.name}</span>
+              <span key={index}><strong> {stat.name}</strong></span>
             )
           })}
           <h4>Base Stats and Mods</h4>
-          <table>
+          <table className='table table-hover table-responsive' style={{'textAlign': 'center'}}>
             <thead>
               <tr>
                 <th>Stat Name</th>
-                <th>Value</th>
-                <th>Bonus from Race</th>
+                <th style={{'textAlign': 'center'}}>Value</th>
+                <th style={{'textAlign': 'center'}}>Bonus from Race</th>
                 <th>Modifier</th>
               </tr>
             </thead>
