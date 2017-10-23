@@ -99,10 +99,8 @@ class Dashboard extends Component {
         <div className = "game-wrapper">
 
             {this.state.gameArray.map((game) => {
-              let statusStyling = ""
               let numPlayers = game.Characters.length
               if (game.adminUserId === this.state.userId){
-                statusStyling = "adminStyling"
                 gameHTML = (
                   <img className = 'dnd-logo'
                     src={gmIcon}
@@ -110,30 +108,24 @@ class Dashboard extends Component {
                 )
               }
               else {
-                statusStyling = 'noPlayerStyling'
                 gameHTML = (
                   <img className='dnd-logo' src="http://www.enworld.org/forum/attachment.php?s=d02d85744644ba734eec5e6c5b07bd22&attachmentid=62059&d=1402069840&stc=1" alt=''/>
                 )
               }
               game.Characters.map((char) => {
                 if(char.UserId === this.state.userId){
-                  statusStyling = 'playerStyling'
                   gameHTML = (
                     <img className='dnd-logo' src="http://www.watchtowerrestaurant.com/wp-content/uploads/2016/11/cropped-Dice-d20-Opaque2_black.png" alt=''/>
                   )
-
                 }
               })
-
-              return (
-
+              return(
                 <div className="gameName-container" key={game.id}>
                     <Link id="linkToGame" to={`/dashboard/game/${game.id}`}>
                     {game.title} - {numPlayers} player(s)
                     {gameHTML}
                     </Link>
                 </div>
-
               )
             })}
 

@@ -128,7 +128,7 @@ class GameConfig extends Component {
               </h3>
             </div>
           )
-          return
+          return false
         }
         return userChar = (
           <div>

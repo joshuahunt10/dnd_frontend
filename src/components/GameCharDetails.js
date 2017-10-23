@@ -261,7 +261,6 @@ class GameCharDetails extends Component {
             raceName = {this.state.raceName}
             className = {this.state.className}
             background = {this.state.background}
-            level = {this.state.level}
             increaseStat = {this.increaseStat}
             decreaseStat = {this.decreaseStat}
             hp = {hp}

@@ -7,7 +7,7 @@ class BaseLayout extends Component {
     return (
       <div>
         <nav className="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-          <img className="navbar-fire" src="http://i.imgur.com/2a3pDfM.gif"/>
+          <img className="navbar-fire" src="http://i.imgur.com/2a3pDfM.gif" alt="dancing fire"/>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -30,7 +30,7 @@ class BaseLayout extends Component {
               </li>
             </ul>
 
-            <img className="navbar-fire" src="http://i.imgur.com/2a3pDfM.gif"/>
+            <img className="navbar-fire" src="http://i.imgur.com/2a3pDfM.gif" alt="dancing fire"/>
 
           </div>
         </nav>
