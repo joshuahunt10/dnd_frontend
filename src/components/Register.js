@@ -44,7 +44,14 @@ class Register extends Component {
   }
 
   passwordInput = (password, confPassword) => {
-    if(this.state.password !== this.state.confPassword){
+    if(password.length < 6){
+      this.setState({
+        passWarning: 'warningStyle',
+        confPassWarning: 'warningStyle'
+      })
+      return 'Password must be at least 6 characters long'
+    }
+    else if(this.state.password !== this.state.confPassword){
       this.setState({
         passWarning: 'warningStyle',
         confPassWarning: 'warningStyle'
@@ -59,26 +66,11 @@ class Register extends Component {
     }
   }
 
-
-  // FIXME: bug here where the setState is not working fast enough?  It is not giving the warning style to the password box.
-  passwordLength = (password) =>{
-    if(password.length < 6){
-      this.setState({
-        passWarning: 'warningStyle',
-        confPassWarning: 'warningStyle'
-      })
-      return 'Password must be at least 6 characters long'
-    }
-    else{
-      this.setState({passWarning: ""})
-    }
-  }
-
   formValidate = (e, name, email, password, confPassword) => {
     e.preventDefault()
     let errors = []
     let errorList = []
-    errors = [this.nameInput(this.state.name), this.emailInput(this.state.email), this.passwordLength(this.state.password), this.passwordInput(this.state.password, this.state.confPassword)]
+    errors = [this.nameInput(this.state.name), this.emailInput(this.state.email), this.passwordInput(this.state.password, this.state.confPassword)]
     errors.forEach(msg => {
       if(typeof msg === 'string'){
         errorList.push(msg)
@@ -92,7 +84,7 @@ class Register extends Component {
     }
     else{
       this.setState({
-        errorArray: errorList,
+        errorArray: errorList
 
       })
     }
