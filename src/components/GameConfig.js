@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom'
 import localStorage from 'local-storage'
+import GameConfig_Chars from './GameConfig_Chars'
 
 
 class GameConfig extends Component {
@@ -17,10 +18,6 @@ class GameConfig extends Component {
       userId: "",
       userName: ""
     }
-
-    this.fetchGames = this.fetchGames.bind(this);
-    this.fetchUser = this.fetchUser.bind(this);
-    this.fetchAdminUser = this.fetchAdminUser.bind(this);
   }
 
   componentDidMount(){
@@ -28,7 +25,7 @@ class GameConfig extends Component {
     this.fetchUser();
   }
 
-  fetchUser(){
+  fetchUser = () => {
     fetch(`${process.env.REACT_APP_API_SERVER}/api/user`,{
       method: "GET",
       headers: {
@@ -45,7 +42,7 @@ class GameConfig extends Component {
     })
   }
 
-  fetchGames(){
+  fetchGames = () => {
     fetch(`${process.env.REACT_APP_API_SERVER}/api/games/details`,{
       method: "POST",
       body: JSON.stringify({
@@ -67,7 +64,7 @@ class GameConfig extends Component {
     })
   }
 
-  fetchAdminUser (adminUserId){
+  fetchAdminUser = (adminUserId) => {
     fetch(`${process.env.REACT_APP_API_SERVER}/api/userdetails`, {
       method: "POST",
       body: JSON.stringify({
@@ -87,58 +84,6 @@ class GameConfig extends Component {
     })
   }
   render() {
-    let userChar = <span />
-    let charList = (
-      this.state.game.Characters.map((c, index)=>{
-        return(
-          <li key={index}>{c.charName}</li>
-        )
-      })
-    )
-    if(this.state.game.Characters.length === 0 && this.state.game.adminUserId !== this.state.userId){
-      userChar = (
-        <div>
-          <h2>There are not any heroes in this world... yet!</h2>
-          <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a hero</Link>
-        </div>
-      )
-    } else if(this.state.game.Characters.length === 0 && this.state.game.adminUserId === this.state.userId){
-      userChar = (
-        <div>
-          <h2>No one has joined the game.</h2>
-        </div>
-      )
-    }
-    else if(this.state.game.adminUserId === this.state.userId){
-      userChar = <span />
-      charList = (
-        this.state.game.Characters.map((char, index)=>{
-          return(
-            <li key={index}> <Link to={`/dashboard/game/${this.state.game.id}/${char.id}`}> {char.charName}</Link></li>
-          )
-        })
-      )
-    }else(
-      this.state.game.Characters.map((char) =>{
-        if(char.UserId === this.state.userId){
-          userChar = (
-            <div className="playerViewChar">
-              <h3>Your Hero:
-                <Link className='charLink' to={`/dashboard/game/${this.state.game.id}/${char.id}`}> {char.charName}</Link>
-              </h3>
-            </div>
-          )
-          return false
-        }
-        return userChar = (
-          <div>
-            <h2>You don't have any characters in this game.</h2>
-            <Link to={`/dashboard/charcreate/${this.state.game.id}`}>Create a Hero to Join!</Link>
-          </div>
-        )
-      })
-    )
-
     return (
       <div className='container game-config-container'>
         <div className='game-config-head'>
@@ -147,18 +92,12 @@ class GameConfig extends Component {
           <hr />
           <label>About this game:</label> <p>{this.state.game.description}</p>
         </div>
-        <div className="playerViewCharWrapper">
-          {userChar}
+        <div>
+          <GameConfig_Chars
+            game = {this.state.game}
+            userId = {this.state.userId}
+          />
         </div>
-        <div className="adminViewCharListWrapper">
-          <div className="adminViewCharList">
-            <h4>The heroes of this world are:</h4>
-            <ul>
-              {charList}
-            </ul>
-          </div>
-        </div>
-
       </div>
     );
   }

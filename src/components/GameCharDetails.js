@@ -99,7 +99,6 @@ class GameCharDetails extends Component {
   componentWillMount() {
     this.fetchOneChar()
   }
-
   fetchCharAPI = (classID, raceID) => {
     fetch(`http://www.dnd5eapi.co/api/classes/${classID}`).then(r => r.json()).then(json => {
       this.setState({class: json})
@@ -116,7 +115,6 @@ class GameCharDetails extends Component {
     fetch(`http://www.dnd5eapi.co/api/races/${raceID}`).then(r => r.json()).then(json => {
       this.setState({race: json})
     })
-
   }
 
   fetchOneChar = () => {
