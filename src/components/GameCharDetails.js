@@ -73,6 +73,7 @@ class GameCharDetails extends Component {
       subRace: "",
       subClass: "",
       success: false,
+      rollStatus: false,
       race: {
         size: "",
         speed: 0,
@@ -99,6 +100,29 @@ class GameCharDetails extends Component {
   componentWillMount() {
     this.fetchOneChar()
   }
+
+  componentDidMount() {
+    this.fetchRollStatus()
+  }
+
+  fetchRollStatus = () => {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/char/rollStatus`, {
+      method: "POST",
+      body: JSON.stringify({charId: this.props.match.params.charId}),
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(json => {
+      this.setState({
+        rollStatus: json.requestedRoll
+      })
+    })
+    setTimeout(this.fetchRollStatus , 5000);
+  }
+
   fetchCharAPI = (classID, raceID) => {
     fetch(`http://www.dnd5eapi.co/api/classes/${classID}`).then(r => r.json()).then(json => {
       this.setState({class: json})

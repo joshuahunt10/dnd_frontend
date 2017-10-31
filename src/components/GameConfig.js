@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom'
 import localStorage from 'local-storage'
 import GameConfig_Chars from './GameConfig_Chars'
 
