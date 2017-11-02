@@ -7,9 +7,12 @@ import BaseInfo from './DisplayCharacter/BaseInfo'
 import AllProf from './DisplayCharacter/AllProf'
 import ChosenSubClassAndRace from './DisplayCharacter/ChosenSubClassAndRace'
 import Stats from './DisplayCharacter/Stats'
+import ReactTimeout from 'react-timeout'
 
 
 // put pure calculations here that don't need state / props
+
+// let timeoutVar;
 
 function calcMod(num) {
   if (!num) {
@@ -105,6 +108,12 @@ class GameCharDetails extends Component {
     this.fetchRollStatus()
   }
 
+  componentWillUnmount(){
+    this.stopFetchRoll()
+  }
+
+
+
   fetchRollStatus = () => {
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/rollStatus`, {
       method: "POST",
@@ -116,11 +125,20 @@ class GameCharDetails extends Component {
     })
     .then(r => r.json())
     .then(json => {
+      console.log('checking roll status')
       this.setState({
         rollStatus: json.requestedRoll
       })
     })
-    setTimeout(this.fetchRollStatus , 5000);
+    this.timeoutVar = setTimeout(this.fetchRollStatus, 5000);
+  }
+
+
+
+  stopFetchRoll = () => {
+    console.log('SHOW WHEN LEAVING PAGE')
+    clearTimeout(this.timeoutVar)
+
   }
 
   fetchCharAPI = (classID, raceID) => {
