@@ -54,7 +54,6 @@ class GameConfig extends Component {
     })
     .then(r => r.json())
     .then(json => {
-      console.log('fetching game', json);
       this.setState({
         game: json
       }, () => {
@@ -76,7 +75,6 @@ class GameConfig extends Component {
     })
     .then(r => r.json())
     .then(json => {
-      console.log('json from api/userdetails', json);
       this.setState({
         adminUser: json.name
       })
@@ -95,6 +93,7 @@ class GameConfig extends Component {
           <GameConfig_Chars
             game = {this.state.game}
             userId = {this.state.userId}
+            token = {this.state.token}
           />
         </div>
       </div>

@@ -7,12 +7,9 @@ import BaseInfo from './DisplayCharacter/BaseInfo'
 import AllProf from './DisplayCharacter/AllProf'
 import ChosenSubClassAndRace from './DisplayCharacter/ChosenSubClassAndRace'
 import Stats from './DisplayCharacter/Stats'
-import ReactTimeout from 'react-timeout'
 
 
 // put pure calculations here that don't need state / props
-
-// let timeoutVar;
 
 function calcMod(num) {
   if (!num) {
@@ -43,7 +40,9 @@ class GameCharDetails extends Component {
       token: localStorage.get("JWT"),
       modalText: '',
       modalTitle: '',
+      modalInput: '',
       showModal: false,
+      showRollModal: false,
       id: "",
       str: "",
       dex: "",
@@ -127,18 +126,54 @@ class GameCharDetails extends Component {
     .then(json => {
       console.log('checking roll status')
       this.setState({
-        rollStatus: json.requestedRoll
+        rollStatus: json.requestedRoll,
+        showRollModal: json.requestedRoll,
+        modalText: json.rollMessage,
+        modalTitle: 'Roll Requested',
       })
     })
     this.timeoutVar = setTimeout(this.fetchRollStatus, 5000);
   }
 
-
-
   stopFetchRoll = () => {
     console.log('SHOW WHEN LEAVING PAGE')
     clearTimeout(this.timeoutVar)
+  }
 
+  rollModal = () => {
+    this.setState({
+      modalText: "A roll is requested",
+      modalTitle: "Make a roll",
+      showModal: true,
+    })
+  }
+
+  closeModalButt = (e) => {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/char/rollStatus`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        charId: this.props.match.params.charId,
+        rollStatus: false
+      }),
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        charId: this.props.match.params.charId,
+        rollStatus: this.state.modalInput
+      }),
+      headers: {
+        'token': this.state.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    this.setState({
+      showRollModal: false
+    })
   }
 
   fetchCharAPI = (classID, raceID) => {
@@ -292,6 +327,7 @@ class GameCharDetails extends Component {
     if (this.state.success) {
       return <Redirect to='/dashboard'/>
     }
+    console.log(this.state.rollStatus);
     return (
       <div className='container charSheet'>
         <div className="rowField">
@@ -374,6 +410,18 @@ class GameCharDetails extends Component {
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={e => this.setState({showModal: false})}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+        <div className="container modal-div">
+          <Modal animation={false} show={this.state.showRollModal} onHide={this.close}>
+            <Modal.Body>
+              <h1>{this.state.modalTitle}</h1>
+              <p>{this.state.modalText}</p>
+              <input type="text" onChange={e => this.setState({modalInput: e.target.value})}/>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.closeModalButt}>Close</Button>
             </Modal.Footer>
           </Modal>
         </div>
