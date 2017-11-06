@@ -153,6 +153,9 @@ class GameConfig_Chars extends Component {
   //characters and game admin view
   else if(this.props.game.adminUserId === this.props.userId){
     userChar = <span />
+    for (var i = 0; i < this.props.game.Characters.length; i++) {
+      this.props.game.Characters[i]
+    }
     charList = (
       this.props.game.Characters.map((char, index)=>{
         return(
@@ -167,26 +170,31 @@ class GameConfig_Chars extends Component {
     )
   }
   //characters and normal user
-  else(
-    this.props.game.Characters.map((char) =>{
-      if(char.UserId === this.props.userId){
+  else{
+    console.log('in the else')
+    let char = this.props.game.Characters
+    console.log(char);
+    for (var i = 0; i < char.length; i++) {
+      if(char[i].UserId === this.props.userId){
         userChar = (
           <div className="playerViewChar">
-            <h3>Your Hero:
-              <Link className='charLink' to={`/dashboard/game/${this.props.game.id}/${char.id}`}> {char.charName}</Link>
+             <h3>Your Hero:
+              <Link className='charLink' to={`/dashboard/game/${this.props.game.id}/${char[i].id}`}> {char[i].charName}</Link>
             </h3>
           </div>
         )
-        return false
+        break;
       }
-      return userChar = (
-        <div>
-          <h2>You don't have any characters in this game.</h2>
-          <Link to={`/dashboard/charcreate/${this.props.game.id}`}>Create a Hero to Join!</Link>
-        </div>
-      )
-    })
-  )
+      else{
+        userChar = (
+          <div>
+            <h2>You don't have any characters in this game.</h2>
+            <Link to={`/dashboard/charcreate/${this.props.game.id}`}>Create a Hero to Join!</Link>
+          </div>
+        )
+      }
+    }
+  }
     return (
       <div>
         <div className="playerViewCharWrapper">
