@@ -94,6 +94,7 @@ class GameConfig extends Component {
             game = {this.state.game}
             userId = {this.state.userId}
             token = {this.state.token}
+            fetchGames = {this.fetchGames}
           />
         </div>
       </div>

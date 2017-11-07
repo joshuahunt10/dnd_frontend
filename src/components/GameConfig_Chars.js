@@ -12,41 +12,39 @@ class GameConfig_Chars extends Component {
       charId: "",
       showRollResultModal: false,
       rollResultModalText: "",
-      rollResultModalTitle: "",
-      rollButton: true
+      rollResultModalTitle: ""
+
     }
   }
-  componentWillReceiveProps(){
-    this.initialRollButtonStatus(this.props.game.Characters)
-  }
+
+  // componentWillReceiveProps(){
+  //   this.fetchSubmittedRollStatus()
+  // }
 
   componentWillUnmount(){
     clearTimeout(this.timeoutVar)
   }
 
-  initialRollButtonStatus = (charArray) => {
-    charArray.map((char, index) =>{
-      fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
-        method: "POST",
-        body: JSON.stringify({charId: char.id}),
-        headers: {
-          'token': this.props.token,
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(r => r.json())
-      .then(json => {
-        if(json.submittedRoll !== '0'){
-          this.setState({
-            rollButton: false
-          })
-        }
-      })
-    })
-  }
+  // initialRollButtonStatus = (charArray) => {
+  //   charArray.map((char, index) =>{
+  //     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
+  //       method: "POST",
+  //       body: JSON.stringify({charId: char.id}),
+  //       headers: {
+  //         'token': this.props.token,
+  //         'Content-Type': 'application/json'
+  //       }
+  //     })
+  //     .then(r => r.json())
+  //     .then(json => {
+  //       console.log('intialRollButtonStatus runs')
+  //     })
+  //   })
+  // }
 
   requestRoll = (e) => {
     this.charId = parseInt(this.state.charId, 10)
+    console.log('RUN requestRoll');
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/rollStatus`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -64,27 +62,27 @@ class GameConfig_Chars extends Component {
   }
 
   fetchSubmittedRollStatus = () => {
-    fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
-      method: "POST",
-      body: JSON.stringify({charId: this.charId}),
-      headers: {
-        'token': this.props.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(r => r.json())
-    .then(json => {
-      if(json.submittedRoll !== '0'){
-        this.setState({
-          rollButton: false
-        })
-      }
-    })
+    this.props.fetchGames()
+    // this.forceUpdate()
+    console.log('RUNNING fetchSubmittedRollStatus')
     this.timeoutVar = setTimeout(this.fetchSubmittedRollStatus, 5000);
+    // fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
+    //   method: "POST",
+    //   body: JSON.stringify({charId: this.charId}),
+    //   headers: {
+    //     'token': this.props.token,
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    // .then(r => r.json())
+    // .then(json => {
+    //   console.log('fetchSubmittedRollStatus run')
+    // })
+
   }
 
-  fetchRollResult= (e) => {
-    clearTimeout(this.timeoutVar)
+  fetchRollResult = (e) => {
+    // clearTimeout(this.timeoutVar)
     this.setState({charId: e.target.value})
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
       method: "POST",
@@ -100,7 +98,7 @@ class GameConfig_Chars extends Component {
           showRollResultModal: true,
           rollResultModalText: json.submittedRoll,
           rollResultModalTitle: json.rollMessage,
-          rollButton: true
+
         })
 
     })
@@ -108,23 +106,31 @@ class GameConfig_Chars extends Component {
 
   closeRollResultModal = (e) => {
     this.charId = parseInt(this.state.charId, 10)
-    this.setState({showRollResultModal: false, rollButton: true})
-    clearTimeout(this.timeoutVar)
+    // clearTimeout(this.timeoutVar)
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
       method: "PATCH",
       body: JSON.stringify({
         charId: this.charId,
-        rollStatus: '0',
-        reqRoll: false
+        reqRoll: false,
+        rollStatus: "",
+        rollMessage: ""
       }),
       headers: {
         'token': this.props.token,
         'Content-Type': 'application/json'
       }
     })
+    .then(r => r.json())
+    .then(json => {
+      console.log(json);
+      this.setState({showRollResultModal: false})
+      console.log(this.state.showRollResultModal)
+    })
   }
 
   render() {
+  console.log('showRollResultModal',this.state.showRollResultModal);
+  let rollButton = ""
   let userChar = <span />
   let charList = (
       this.props.game.Characters.map((c, index)=>{
@@ -161,9 +167,9 @@ class GameConfig_Chars extends Component {
         return(
           <li key={index}>
             <Link to={`/dashboard/game/${this.props.game.id}/${char.id}`}> {char.charName}</Link>
-            {this.state.rollButton ? <button onClick={e => this.setState({showRollReqModal: true, charId: e.target.value})} value={char.id}>Roll!</button> :
-              <button onClick={this.fetchRollResult} value={char.id}>Result!</button>
-           }
+            {char.submittedRoll ?
+                <button onClick={this.fetchRollResult} value={char.id}>Result!</button>  :
+                <button onClick={e => this.setState({showRollReqModal: true, charId: e.target.value})} value={char.id}>Roll!</button>}
           </li>
         )
       })
@@ -171,9 +177,7 @@ class GameConfig_Chars extends Component {
   }
   //characters and normal user
   else{
-    console.log('in the else')
     let char = this.props.game.Characters
-    console.log(char);
     for (var i = 0; i < char.length; i++) {
       if(char[i].UserId === this.props.userId){
         userChar = (
@@ -216,7 +220,7 @@ class GameConfig_Chars extends Component {
               <input type="text" onChange={e => this.setState({modalInput: e.target.value})}/>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.requestRoll}>Submit</Button>
+              <Button value={this.state.charId} onClick={this.requestRoll}>Submit</Button>
             </Modal.Footer>
           </Modal>
         </div>
