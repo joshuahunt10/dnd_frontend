@@ -17,30 +17,9 @@ class GameConfig_Chars extends Component {
     }
   }
 
-  // componentWillReceiveProps(){
-  //   this.fetchSubmittedRollStatus()
-  // }
-
   componentWillUnmount(){
     clearTimeout(this.timeoutVar)
   }
-
-  // initialRollButtonStatus = (charArray) => {
-  //   charArray.map((char, index) =>{
-  //     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
-  //       method: "POST",
-  //       body: JSON.stringify({charId: char.id}),
-  //       headers: {
-  //         'token': this.props.token,
-  //         'Content-Type': 'application/json'
-  //       }
-  //     })
-  //     .then(r => r.json())
-  //     .then(json => {
-  //       console.log('intialRollButtonStatus runs')
-  //     })
-  //   })
-  // }
 
   requestRoll = (e) => {
     this.charId = parseInt(this.state.charId, 10)
@@ -63,26 +42,11 @@ class GameConfig_Chars extends Component {
 
   fetchSubmittedRollStatus = () => {
     this.props.fetchGames()
-    // this.forceUpdate()
     console.log('RUNNING fetchSubmittedRollStatus')
     this.timeoutVar = setTimeout(this.fetchSubmittedRollStatus, 5000);
-    // fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
-    //   method: "POST",
-    //   body: JSON.stringify({charId: this.charId}),
-    //   headers: {
-    //     'token': this.props.token,
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    // .then(r => r.json())
-    // .then(json => {
-    //   console.log('fetchSubmittedRollStatus run')
-    // })
-
   }
 
   fetchRollResult = (e) => {
-    // clearTimeout(this.timeoutVar)
     this.setState({charId: e.target.value})
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
       method: "POST",
@@ -98,15 +62,12 @@ class GameConfig_Chars extends Component {
           showRollResultModal: true,
           rollResultModalText: json.submittedRoll,
           rollResultModalTitle: json.rollMessage,
-
         })
-
     })
   }
 
   closeRollResultModal = (e) => {
     this.charId = parseInt(this.state.charId, 10)
-    // clearTimeout(this.timeoutVar)
     fetch(`${process.env.REACT_APP_API_SERVER}/api/char/submitRollStatus`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -122,14 +83,13 @@ class GameConfig_Chars extends Component {
     })
     .then(r => r.json())
     .then(json => {
-      console.log(json);
       this.setState({showRollResultModal: false})
-      console.log(this.state.showRollResultModal)
+      this.props.fetchGames()
+      clearTimeout(this.timeoutVar)
     })
   }
 
   render() {
-  console.log('showRollResultModal',this.state.showRollResultModal);
   let rollButton = ""
   let userChar = <span />
   let charList = (
